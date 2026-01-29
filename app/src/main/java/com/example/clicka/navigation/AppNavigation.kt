@@ -25,8 +25,10 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.example.clicka.overlayPermission
 import com.example.clicka.screens.select.SelectTab
 import com.example.clicka.screens.setings.SettingsTab
+import com.example.clicka.services.overlayservice.OverlayService
 import com.example.clicka.ui.theme.ClickaTheme
 
 class MainActivity : ComponentActivity() {
@@ -56,8 +58,11 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+            overlayPermission(this)
         }
     }
+
+
 }
 
 @Composable

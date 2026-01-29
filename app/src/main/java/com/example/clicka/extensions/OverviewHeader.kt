@@ -1,5 +1,6 @@
 package com.example.clicka.extensions
 
+import android.content.Context
 import android.icu.text.CaseMap
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.clicka.overlayPermission
 
 
 @Composable
@@ -26,7 +28,6 @@ internal fun OverviewHeader(
     title: String,
 
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -35,24 +36,25 @@ internal fun OverviewHeader(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Text(title, style = MaterialTheme.typography.headlineLarge,
+        Text(
+            title, style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
 
-            )
+        )
         FloatingActionButton(
-            onClick = {},
+            onClick = { },
             modifier = Modifier
                 .clip(MaterialTheme.shapes.large)
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.primary,
-                MaterialTheme.shapes.large
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.primary,
+                    MaterialTheme.shapes.large
 
-            ),
+                ),
             containerColor = Color.Transparent
         ) {
-            Icon(imageVector = Icons.Filled.Add,null, tint = MaterialTheme.colorScheme.onSurface)
+            Icon(imageVector = Icons.Filled.Add, null, tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 

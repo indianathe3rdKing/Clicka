@@ -57,9 +57,7 @@ private fun ButtonCard(
                         .fillMaxSize()
                         .align(Alignment.Center)
                         .clip(MaterialTheme.shapes.large)
-
                 )
-
             }
             Spacer(modifier = Modifier.width(24.dp))
             Column(

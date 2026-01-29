@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -119,14 +120,20 @@ class OverlayService : Service() {
         composeView.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
         composeView.setViewTreeViewModelStoreOwner(viewModelStoreOwner)
 
+        // Add the ComposeView to the WindowManager so it becomes visible
+        windowManager.addView(composeView, params)
+        // Keep a reference so we can remove it later in onDestroy
+        overlayView = composeView
+
     }
 
     override fun onDestroy() {
-        lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        // Notify STOP before DESTROY to follow proper lifecycle ordering
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+        lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         overlayView?.let{
             try {
-                windowManager.removeView((it))
+                windowManager.removeView(it)
             }catch (_: Throwable){
 
             }
@@ -160,8 +167,8 @@ private fun FloatingButton(
             exit = fadeOut()+ slideOutVertically(targetOffsetY = {it})+ shrinkVertically()
         ) {
             FloatingActionButton(
-                onClick = {},
-                containerColor = Color(0,150,136,255),
+                onClick = {onClose()},
+                containerColor = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier.padding(6.dp)
             ) {
                 Icon(Icons.Filled.Build,null)
@@ -169,7 +176,7 @@ private fun FloatingButton(
         }
 
         FloatingActionButton(
-            onClick = {},
+            onClick = {expanded = !expanded},
             modifier = Modifier
                 .pointerInput(Unit){
                     detectDragGestures { change, dragAmount ->
@@ -180,10 +187,11 @@ private fun FloatingButton(
                         )
                     }
                 }
-            ,containerColor = Color(0,150,136,255),
+            ,containerColor = Color(255, 152, 0, 255),
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
-            Icon(imageVector = Icons.Filled.Add,null)
+            Icon(imageVector = Icons.Filled.Add,null,
+                tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

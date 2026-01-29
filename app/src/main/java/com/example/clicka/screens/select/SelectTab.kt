@@ -9,12 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.clicka.extensions.ButtonComponent
 import com.example.clicka.extensions.OverviewHeader
 import com.example.clicka.index.ButtonInfoProvider
+import com.example.clicka.overlayPermission
 
 object SelectTab : Tab {
     override val options: TabOptions
