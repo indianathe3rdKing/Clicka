@@ -18,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.clicka.overlayPermission
 
 
@@ -40,7 +42,9 @@ internal fun OverviewHeader(
         Text(
             title, style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            fontWeight = FontWeight.Bold,
+            letterSpacing = (1.2).sp
 
         )
         FloatingActionButton(
