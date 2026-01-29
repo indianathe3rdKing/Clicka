@@ -43,6 +43,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import kotlin.math.roundToInt
 
@@ -147,51 +148,3 @@ class OverlayService : Service() {
     }
 }
 
-@Composable
-private fun FloatingButton(
-    onMoveBy:(dragX: Int,dragY: Int)-> Unit,
-    onClose:()-> Unit
-
-){
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .wrapContentHeight()
-            .wrapContentWidth()
-    ) {
-        AnimatedVisibility(
-            visible = expanded ,
-            enter= fadeIn()+ slideInVertically(initialOffsetY = {it})+ expandVertically(),
-            exit = fadeOut()+ slideOutVertically(targetOffsetY = {it})+ shrinkVertically()
-        ) {
-            FloatingActionButton(
-                onClick = {onClose()},
-                containerColor = MaterialTheme.colorScheme.inversePrimary,
-                modifier = Modifier.padding(6.dp)
-            ) {
-                Icon(Icons.Filled.Build,null)
-            }
-        }
-
-        FloatingActionButton(
-            onClick = {expanded = !expanded},
-            modifier = Modifier
-                .pointerInput(Unit){
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        onMoveBy(
-                            dragAmount.x.roundToInt(),
-                            dragAmount.y.roundToInt()
-                        )
-                    }
-                }
-            ,containerColor = Color(255, 152, 0, 255),
-            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-        ) {
-            Icon(imageVector = Icons.Filled.Add,null,
-                tint = MaterialTheme.colorScheme.onSurface)
-        }
-    }
-}
