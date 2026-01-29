@@ -1,7 +1,5 @@
 package com.example.clicka.extensions
 
-import android.content.Context
-import android.icu.text.CaseMap
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -19,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.clicka.overlayPermission
 
@@ -28,6 +27,8 @@ internal fun OverviewHeader(
     title: String,
 
 ) {
+    val ctx = LocalContext.current
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -43,7 +44,7 @@ internal fun OverviewHeader(
 
         )
         FloatingActionButton(
-            onClick = { },
+            onClick = { overlayPermission(ctx) },
             modifier = Modifier
                 .clip(MaterialTheme.shapes.large)
                 .border(

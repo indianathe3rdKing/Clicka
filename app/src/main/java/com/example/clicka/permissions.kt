@@ -13,7 +13,11 @@ internal fun overlayPermission(context: Context) {
         val intent = Intent(
             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
             Uri.parse("package:${context.packageName}")
-        )
+        ).apply {
+            // When starting the Settings activity from a non-Activity context (e.g. a Service
+            // or application context), we must set FLAG_ACTIVITY_NEW_TASK to avoid a runtime crash.
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(intent)
         return
 
