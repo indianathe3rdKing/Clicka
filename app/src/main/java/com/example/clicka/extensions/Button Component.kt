@@ -69,7 +69,7 @@ private fun ButtonCard(
                     buttonInfo.title, style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     buttonInfo.description, style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(0.86f)
