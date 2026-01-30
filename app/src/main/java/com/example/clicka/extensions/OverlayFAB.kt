@@ -7,9 +7,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
@@ -24,13 +27,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.clicka.R
 import com.example.clicka.extensions.components.fabComponent
 import com.example.clicka.index.ButtonInfoProvider
 import kotlin.math.roundToInt
+import com.example.clicka.services.overlayservice.OverlayService
 
 @Composable
 internal fun FloatingButton(
@@ -42,16 +50,22 @@ internal fun FloatingButton(
 
     Column(
         modifier = Modifier
+            .clip(MaterialTheme.shapes.large)
             .padding(16.dp)
             .wrapContentHeight()
             .wrapContentWidth()
+            .background(Color(98, 97, 97, 52), MaterialTheme.shapes.large),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+
     ) {
         AnimatedVisibility(
             visible = expanded ,
             enter= fadeIn()+ slideInVertically(initialOffsetY = {it})+ expandVertically(),
             exit = fadeOut()+ slideOutVertically(targetOffsetY = {it})+ shrinkVertically()
         ) {
-            fabComponent(ButtonInfoProvider.fabItems)
+            fabComponent(ButtonInfoProvider.fabItems(onClose))
+
         }
 
         FloatingActionButton(
@@ -65,11 +79,11 @@ internal fun FloatingButton(
                             dragAmount.y.roundToInt()
                         )
                     }
-                }
-            ,containerColor = Color(255, 152, 0, 255),
+                }.size(50.dp)
+            , containerColor =Color.Transparent,
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
-            Icon(imageVector = Icons.Filled.Add,null,
+            Icon(painter= painterResource(R.drawable.add_home),null,
                 tint = MaterialTheme.colorScheme.onSurface)
         }
     }

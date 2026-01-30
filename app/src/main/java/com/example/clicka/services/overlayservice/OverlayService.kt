@@ -142,6 +142,11 @@ class OverlayService : Service() {
         super.onDestroy()
     }
 
+    internal fun onClose(){
+         stopSelf()
+     }
+
+
     override fun onBind(intent: Intent?): IBinder? {
         return null
 

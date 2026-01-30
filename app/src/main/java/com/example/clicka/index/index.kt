@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import com.example.clicka.R
+import com.example.clicka.services.overlayservice.OverlayService
 
 data class ButtonInfo(
     val title: String,
@@ -35,9 +36,14 @@ object ButtonInfoProvider {
         )
     )
 
-    val fabItems : List<FABInfo> = listOf(
+    fun fabItems(onClose: () -> Unit):  List<FABInfo> = listOf(
         FABInfo(R.drawable.play,{}),
         FABInfo(R.drawable.add_diamond, {}),
-        FABInfo(R.drawable.remove, {})
+        FABInfo(R.drawable.remove, {}),
+        FABInfo(R.drawable.close, {onClose() })
     )
+
 }
+
+
+
