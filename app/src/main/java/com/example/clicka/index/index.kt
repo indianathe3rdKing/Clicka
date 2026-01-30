@@ -12,6 +12,9 @@ data class ButtonInfo(
 )
 
 
+data class FABInfo(val icon: Int,val onClick: () -> Unit)
+
+
 object ButtonInfoProvider {
     // Sample/fake data that compiles without Android drawable resources
     val samples: List<ButtonInfo> = listOf(
@@ -30,5 +33,11 @@ object ButtonInfoProvider {
             description = "Share with others",
             icon = R.drawable.swipe
         )
+    )
+
+    val fabItems : List<FABInfo> = listOf(
+        FABInfo(R.drawable.play,{}),
+        FABInfo(R.drawable.add_diamond, {}),
+        FABInfo(R.drawable.remove, {})
     )
 }

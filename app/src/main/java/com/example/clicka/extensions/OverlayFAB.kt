@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import com.example.clicka.extensions.components.fabComponent
+import com.example.clicka.index.ButtonInfoProvider
 import kotlin.math.roundToInt
 
 @Composable
@@ -49,13 +51,7 @@ internal fun FloatingButton(
             enter= fadeIn()+ slideInVertically(initialOffsetY = {it})+ expandVertically(),
             exit = fadeOut()+ slideOutVertically(targetOffsetY = {it})+ shrinkVertically()
         ) {
-            FloatingActionButton(
-                onClick = {onClose()},
-                containerColor = MaterialTheme.colorScheme.inversePrimary,
-                modifier = Modifier.padding(6.dp)
-            ) {
-                Icon(Icons.Filled.Build,null)
-            }
+            fabComponent(ButtonInfoProvider.fabItems)
         }
 
         FloatingActionButton(

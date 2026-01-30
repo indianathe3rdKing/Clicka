@@ -83,7 +83,7 @@ class OverlayService : Service() {
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-            PixelFormat.TRANSLUCENT
+            PixelFormat.TRANSPARENT
 
         ).apply {
             gravity = Gravity.TOP or Gravity.START
