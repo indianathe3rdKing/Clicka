@@ -48,7 +48,7 @@ private fun FAB(fabInfo: FABInfo) {
             Icon(
                 painter = painterResource(fabInfo.icon),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = Color.White,
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
             )

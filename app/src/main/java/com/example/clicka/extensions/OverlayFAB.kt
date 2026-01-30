@@ -83,8 +83,8 @@ internal fun FloatingButton(
             , containerColor =Color.Transparent,
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
-            Icon(painter= painterResource(R.drawable.add_home),null,
-                tint = MaterialTheme.colorScheme.onSurface)
+            Icon(painter= painterResource(R.drawable.home),null,
+                tint = Color.White)
         }
     }
 }
