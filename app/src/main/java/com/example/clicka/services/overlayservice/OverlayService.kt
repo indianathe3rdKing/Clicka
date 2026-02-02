@@ -32,6 +32,7 @@ import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.clicka.extensions.FloatingButton
+import com.example.clicka.extensions.SettingsModal
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
@@ -214,28 +215,24 @@ class OverlayService : Service() {
             WindowManager.LayoutParams.WRAP_CONTENT,
             layoutFlag,
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL ,
             PixelFormat.TRANSLUCENT
         ).apply{
             gravity = Gravity.TOP or Gravity.START
             x =100
             y=300
         }
+        params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+
 
         val composeView = ComposeView(this).apply { isClickable = true }
         val lifecycleOwner = OverlayLifecyeOwner()
 
         composeView.setContent {
 //            TODO :  make the modal design
-            ClickButton(
-                onMoveBy = { dragX, dragY ->
-                    params.y += dragY
-                    params.x += dragX
-                    windowManager.updateViewLayout(composeView, params)
-                },
-                onRemove = { }, buttonNumber
-            )
+            ClickaTheme {
+                SettingsModal(onClose = { removeButton(composeView, lifecycleOwner) })
+            }
         }
 
         val viewModelStore= ViewModelStore()
@@ -262,6 +259,7 @@ class OverlayService : Service() {
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         try {
             windowManager.removeView(composeView)
+            modalView = null
         } catch (_: Throwable) {
         }
         overlayViews.remove(composeView)
