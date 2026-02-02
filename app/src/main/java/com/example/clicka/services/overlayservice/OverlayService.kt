@@ -12,16 +12,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -47,6 +42,8 @@ class OverlayService : Service() {
         get() = getSystemService(WINDOW_SERVICE) as WindowManager
     private val overlayViews = mutableMapOf<ComposeView, OverlayLifecyeOwner>()
     private var buttonNumber = 0
+
+    private var modalView: ComposeView? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -121,7 +118,7 @@ class OverlayService : Service() {
     }
 
     @Composable
-    private fun AddedButton(
+    private fun ClickButton(
         onMoveBy: (dragX: Int, dragY: Int) -> Unit,
         onRemove: () -> Unit, ButtonNumber: Int
     ) {
@@ -183,7 +180,55 @@ class OverlayService : Service() {
         val lifecycleOwner = OverlayLifecyeOwner()
 
         composeView.setContent {
-            AddedButton(
+            ClickButton(
+                onMoveBy = { dragX, dragY ->
+                    params.y += dragY
+                    params.x += dragX
+                    windowManager.updateViewLayout(composeView, params)
+                },
+                onRemove = {setModal() }, buttonNumber
+            )
+        }
+
+        setupLifecycle(composeView, lifecycleOwner)
+
+        windowManager.addView(composeView, params)
+        overlayViews[composeView] = lifecycleOwner
+    }
+
+    private fun setModal() {
+
+
+        if(modalView!= null) return
+
+        val layoutFlag: Int = if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O ){
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        }else{
+            @Suppress("DEPRECAITON")
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
+
+
+        val params = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            layoutFlag,
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+            PixelFormat.TRANSLUCENT
+        ).apply{
+            gravity = Gravity.TOP or Gravity.START
+            x =100
+            y=300
+        }
+
+        val composeView = ComposeView(this).apply { isClickable = true }
+        val lifecycleOwner = OverlayLifecyeOwner()
+
+        composeView.setContent {
+//            TODO :  make the modal design
+            ClickButton(
                 onMoveBy = { dragX, dragY ->
                     params.y += dragY
                     params.x += dragX
@@ -193,10 +238,23 @@ class OverlayService : Service() {
             )
         }
 
-        setupLifecycle(composeView, lifecycleOwner)
+        val viewModelStore= ViewModelStore()
+        val viewModelStoreOwner= object: ViewModelStoreOwner{
+            override val viewModelStore: ViewModelStore
+                get() = viewModelStore
+        }
 
-        windowManager.addView(composeView, params)
-        overlayViews[composeView] = lifecycleOwner
+        lifecycleOwner.performRestore(null)
+        lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_START)
+
+        composeView.setViewTreeLifecycleOwner(lifecycleOwner)
+        composeView.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
+        composeView.setViewTreeViewModelStoreOwner(viewModelStoreOwner)
+
+        modalView = composeView
+        windowManager.addView(modalView, params)
+
     }
 
     private fun removeButton(composeView: ComposeView, lifecycleOwner: OverlayLifecyeOwner) {
