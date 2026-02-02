@@ -1,2 +1,24 @@
 package com.example.clicka.extensions
 
+import android.graphics.PointF
+import android.graphics.RectF
+
+import kotlin.random.Random
+import kotlin.random.nextInt
+
+fun Random.nextFloat(from: Float,until: Float): Float =
+    (until - from)* nextFloat()
+
+fun Random.nextPosition(area: RectF): PointF =
+    PointF(nextFloat(area.left,area.right),nextFloat(area.top,area.bottom))
+
+fun Random.nextIntInOffset(value: Int,offset: Int): Int=nextInt(
+    value-offset,
+    value+offset+1
+)
+
+fun Random.nextLongInOffset(value:Long,offset: Long): Long = nextLong(
+    value-offset,
+    value+offset+1
+)
+
