@@ -8,11 +8,14 @@ import android.os.IBinder
 import android.provider.Settings
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,9 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -31,13 +38,15 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
+import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
+import com.example.clicka.ui.theme.BorderColor
 
 class OverlayService : Service() {
     private val windowManager
         get() = getSystemService(WINDOW_SERVICE) as WindowManager
     private val overlayViews = mutableMapOf<ComposeView, OverlayLifecyeOwner>()
-    private var buttonNumber =0
+    private var buttonNumber = 0
 
     override fun onCreate() {
         super.onCreate()
@@ -75,16 +84,17 @@ class OverlayService : Service() {
         val lifecycleOwner = OverlayLifecyeOwner()
 
         composeView.setContent {
-            FloatingButton(
-                onMoveBy = {
-                    dragX, dragY ->
-                    params.y += dragY
-                    params.x += dragX
-                    windowManager.updateViewLayout(composeView, params)
-                },
-                onClose = { stopSelf() },
-                onAdd = { addButton() }
-            )
+            ClickaTheme {
+                FloatingButton(
+                    onMoveBy = { dragX, dragY ->
+                        params.y += dragY
+                        params.x += dragX
+                        windowManager.updateViewLayout(composeView, params)
+                    },
+                    onClose = { stopSelf() },
+                    onAdd = { addButton() }
+                )
+            }
         }
 
         setupLifecycle(composeView, lifecycleOwner)
@@ -99,7 +109,8 @@ class OverlayService : Service() {
             owner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             try {
                 windowManager.removeView(view)
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) {
+            }
         }
         overlayViews.clear()
         super.onDestroy()
@@ -115,23 +126,33 @@ class OverlayService : Service() {
         onRemove: () -> Unit, ButtonNumber: Int
     ) {
 
+        ClickaTheme {
+            FloatingActionButton(
+                onClick = { onRemove() },
 
-        FloatingActionButton(
-            onClick = { onRemove() },
-            modifier = Modifier
-                .pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        onMoveBy(
-                            dragAmount.x.roundToInt(),
-                            dragAmount.y.roundToInt()
-                        )
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectDragGestures { change, dragAmount ->
+                            change.consume()
+                            onMoveBy(
+                                dragAmount.x.roundToInt(),
+                                dragAmount.y.roundToInt()
+                            )
+                        }
                     }
-                }
-                .size(50.dp),
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Text(ButtonNumber.toString(), color = MaterialTheme.colorScheme.onPrimary)
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(25.dp))
+                    .border(
+                        2.dp,
+                        BorderColor,
+                        RoundedCornerShape(20.dp)
+                    ),
+                containerColor = Color(98, 97, 97, 52),
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            ) {
+                Text(ButtonNumber.toString(), color = MaterialTheme.colorScheme.onSurface ,
+                    fontWeight= FontWeight.Bold, fontSize = 18.sp)
+            }
         }
     }
 
@@ -168,7 +189,7 @@ class OverlayService : Service() {
                     params.x += dragX
                     windowManager.updateViewLayout(composeView, params)
                 },
-                onRemove = {  },buttonNumber
+                onRemove = { }, buttonNumber
             )
         }
 
@@ -183,7 +204,8 @@ class OverlayService : Service() {
         lifecycleOwner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         try {
             windowManager.removeView(composeView)
-        } catch (_: Throwable) {}
+        } catch (_: Throwable) {
+        }
         overlayViews.remove(composeView)
     }
 
