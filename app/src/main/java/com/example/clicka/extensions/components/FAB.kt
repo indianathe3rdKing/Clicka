@@ -39,7 +39,6 @@ private fun FAB(fabInfo: FABInfo) {
                 focusedElevation = 0.dp
             ),
             modifier = Modifier
-
                 .padding(0.dp) // reduced padding so FABs are closer
                 .size(36.dp),
             containerColor = Color.Transparent

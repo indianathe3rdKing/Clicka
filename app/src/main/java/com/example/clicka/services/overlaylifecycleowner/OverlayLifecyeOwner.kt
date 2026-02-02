@@ -19,7 +19,7 @@ class OverlayLifecyeOwner: SavedStateRegistryOwner {
         get() = mLifecycleRegistry
 
 
-    fun setCureentState(state: Lifecycle.State){
+    fun setCurrentState(state: Lifecycle.State){
         mLifecycleRegistry.currentState=state
     }
     fun handleLifecycleEvent(event: Lifecycle.Event){

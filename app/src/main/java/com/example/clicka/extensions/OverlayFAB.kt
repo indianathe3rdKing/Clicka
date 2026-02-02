@@ -42,10 +42,11 @@ import com.example.clicka.services.overlayservice.OverlayService
 
 @Composable
 internal fun FloatingButton(
-    onMoveBy:(dragX: Int,dragY: Int)-> Unit,
-    onClose:()-> Unit
+    onMoveBy: (dragX: Int, dragY: Int) -> Unit,
+    onClose: () -> Unit,
+    onAdd: () -> Unit
 
-){
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -60,18 +61,18 @@ internal fun FloatingButton(
 
     ) {
         AnimatedVisibility(
-            visible = expanded ,
-            enter= fadeIn()+ slideInVertically(initialOffsetY = {it})+ expandVertically(),
-            exit = fadeOut()+ slideOutVertically(targetOffsetY = {it})+ shrinkVertically()
+            visible = expanded,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it }) + expandVertically(),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
         ) {
-            fabComponent(ButtonInfoProvider.fabItems(onClose))
+            fabComponent(ButtonInfoProvider.fabItems(onClose, onAdd))
 
         }
 
         FloatingActionButton(
-            onClick = {expanded = !expanded},
+            onClick = { expanded = !expanded },
             modifier = Modifier
-                .pointerInput(Unit){
+                .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
                         onMoveBy(
@@ -79,12 +80,14 @@ internal fun FloatingButton(
                             dragAmount.y.roundToInt()
                         )
                     }
-                }.size(50.dp)
-            , containerColor =Color.Transparent,
+                }.size(50.dp),
+            containerColor = Color.Transparent,
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
-            Icon(painter= painterResource(R.drawable.home),null,
-                tint = Color.White)
+            Icon(
+                painter = painterResource(R.drawable.home), null,
+                tint = Color.White
+            )
         }
     }
 }
