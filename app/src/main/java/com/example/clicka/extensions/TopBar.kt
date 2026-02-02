@@ -26,7 +26,7 @@ import com.example.clicka.overlayPermission
 
 
 @Composable
-internal fun OverviewHeader(
+internal fun TopBar(
     title: String,
 
 ) {

@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.clicka.extensions.ButtonComponent
-import com.example.clicka.extensions.OverviewHeader
-import com.example.clicka.index.ButtonInfoProvider
+import com.example.clicka.extensions.TopBar
 
 object SettingsTab: Tab {
     override val options: TabOptions
@@ -37,7 +35,7 @@ object SettingsTab: Tab {
     override fun Content() {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(text = "Settings Tab", modifier = Modifier.align(Alignment.Center))
-            OverviewHeader("Settings")
+            TopBar("Settings")
 
 
 
