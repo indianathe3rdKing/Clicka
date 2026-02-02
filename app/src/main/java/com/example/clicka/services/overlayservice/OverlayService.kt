@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ class OverlayService : Service() {
     private val windowManager
         get() = getSystemService(WINDOW_SERVICE) as WindowManager
     private val overlayViews = mutableMapOf<ComposeView, OverlayLifecyeOwner>()
+    private var buttonNumber =0
 
     override fun onCreate() {
         super.onCreate()
@@ -110,7 +112,7 @@ class OverlayService : Service() {
     @Composable
     private fun AddedButton(
         onMoveBy: (dragX: Int, dragY: Int) -> Unit,
-        onRemove: () -> Unit,
+        onRemove: () -> Unit, ButtonNumber: Int
     ) {
 
 
@@ -129,11 +131,12 @@ class OverlayService : Service() {
                 .size(50.dp),
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
+            Text(ButtonNumber.toString(), color = MaterialTheme.colorScheme.onPrimary)
         }
     }
 
     private fun addButton() {
+        buttonNumber++
         val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -165,7 +168,7 @@ class OverlayService : Service() {
                     params.x += dragX
                     windowManager.updateViewLayout(composeView, params)
                 },
-                onRemove = {  }
+                onRemove = {  },buttonNumber
             )
         }
 

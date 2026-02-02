@@ -14,6 +14,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -22,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.example.clicka.index.FABInfo
 
 @Composable
-private fun FAB(fabInfo: FABInfo) {
+private fun FAB(fabInfo: FABInfo,buttonNumber: Int? = null) {
+    var buttonNumber = remember { mutableStateOf(0) }
     Surface(
         shape = MaterialTheme.shapes.large,
         color = Color.Transparent
