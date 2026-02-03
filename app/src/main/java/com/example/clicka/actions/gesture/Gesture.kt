@@ -1,6 +1,6 @@
 package com.example.clicka.actions.gesture
 
-import android.R.attr.path
+
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Point
@@ -46,17 +46,17 @@ private fun Path.lineTo(position: Point,random: Random){
     )
 }
 
-fun GestureDescription.StrokeDescription(
-    oath:Path,
+fun GestureDescription.Builder.buildSingletonStroke(
+    path:Path,
     durationMs: Long,
     startTime: Long,
     random:Random?
 ): GestureDescription{
-    val actualDurationMs = random.nextLongInOffset(durationMs,
+    val actualDurationMs = random?.nextLongInOffset(durationMs,
         RANDOMIZATION_DURATION_MAX_OFFSET_MS)?:durationMs
 
     try {
-        addStrokes(
+        addStroke(
             GestureDescription.StrokeDescription(
                 path,
                 startTime.toNormalizedStrokeStartTime(),
