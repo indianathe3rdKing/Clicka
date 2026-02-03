@@ -33,6 +33,7 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.extensions.SettingsModal
+import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
@@ -282,5 +283,19 @@ class OverlayService : Service() {
         composeView.setViewTreeLifecycleOwner(lifecycleOwner)
         composeView.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
         composeView.setViewTreeViewModelStoreOwner(viewModelStoreOwner)
+    }
+
+
+
+    fun toggleAutoClick(x:Int,y: Int,intervalMs: Long) {
+        val svc = AutoClickAccessibilityService.instance
+        if (svc != null){
+            svc.toggleAutoClick(x,y,intervalMs)
+        }else{
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+        }
     }
 }
