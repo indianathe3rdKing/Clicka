@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Clicka</string>
+    <string name="accessibility_service_label">Clicka Auto Clicker</string>
+    <string name="accessibility_service_description">This service allows Clicka to perform clicks and gestures on your behalf. No collection of data is done by this service.This is to request permission to access the accessibility service.</string>
 </resources>
