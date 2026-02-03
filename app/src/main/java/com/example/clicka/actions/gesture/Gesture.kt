@@ -1,8 +1,11 @@
 package com.example.clicka.actions.gesture
 
+import android.R.attr.path
+import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Point
 import com.example.clicka.extensions.nextIntInOffset
+import com.example.clicka.extensions.nextLongInOffset
 import com.example.clicka.extensions.safeLineTo
 import com.example.clicka.extensions.safeMoveTo
 
@@ -15,7 +18,7 @@ import kotlin.random.nextInt
 
 
 internal const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
-internal const val RANDOMIZATION_POSITION_MIN_OFFSET_PX = 5L
+internal const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L
 internal const val MINIMUM_STROKE_DURATION_MS = 1L
 internal const val MAXIMUM_STROKE_DURATION_MS = 40L
 
@@ -43,3 +46,37 @@ private fun Path.lineTo(position: Point,random: Random){
     )
 }
 
+fun GestureDescription.StrokeDescription(
+    oath:Path,
+    durationMs: Long,
+    startTime: Long,
+    random:Random?
+): GestureDescription{
+    val actualDurationMs = random.nextLongInOffset(durationMs,
+        RANDOMIZATION_DURATION_MAX_OFFSET_MS)?:durationMs
+
+    try {
+        addStrokes(
+            GestureDescription.StrokeDescription(
+                path,
+                startTime.toNormalizedStrokeStartTime(),
+                actualDurationMs.toNormalizedStrokeDurationMs()
+
+            )
+        )
+    }catch (ex: IllegalStateException){
+        throw IllegalStateException("Invalid gesture: Duration = $durationMs", ex)
+    }catch (ex: IllegalArgumentException){
+        throw IllegalArgumentException("Invalid gesture: Duration = $durationMs", ex)
+    }
+
+    return build()
+
+
+}
+
+
+private fun Long.toNormalizedStrokeStartTime(): Long = max(0,this)
+
+private fun Long.toNormalizedStrokeDurationMs(): Long = max(MINIMUM_STROKE_DURATION_MS,
+    min(MAXIMUM_STROKE_DURATION_MS,this))
