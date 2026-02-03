@@ -58,4 +58,13 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation("cafe.adriel.voyager:voyager-tab-navigator:${voyagerVersion}")
+    // additional small libs
+    implementation("androidx.savedstate:savedstate-ktx:1.4.0")
+
+    // Coroutines - updated to a modern stable version compatible with Kotlin 2.x
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+
+    // javax.inject used by GestureExecutor annotations
+    implementation("javax.inject:javax.inject:1")
 }
