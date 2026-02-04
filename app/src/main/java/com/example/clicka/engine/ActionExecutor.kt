@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.clicka.actions.gesture.buildSingletonStroke
 import com.example.clicka.actions.gesture.line
 import com.example.clicka.actions.gesture.moveTo
+import com.example.clicka.actions.utlis.getPauseDurationMs
 import com.example.clicka.base.AndroidExecutor
 import com.example.clicka.base.UnblockGestureScheduler
 import com.example.clicka.base.buildUnblockGesture
