@@ -6,6 +6,7 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewTreeObserver
 import android.view.WindowManager
@@ -40,6 +41,7 @@ import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
 import com.example.clicka.ui.theme.BorderColor
 
+private val TAG = "Overlay"
 class OverlayService : Service() {
     private val windowManager
         get() = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -207,8 +209,8 @@ class OverlayService : Service() {
 
                     val clickX = params.x + (currentOverlayWidth/2)
                     val clickY = params.y + (currentOverlayHeight/2)
-
-                    toggleAutoClick(500,800,1000) }, buttonNumber
+                    Log.i(TAG, "clickX=$clickX clickY=$clickY")
+                    toggleAutoClick(clickX,clickY,1000) }, buttonNumber
             )
         }
 
