@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import android.view.Gravity
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -46,6 +47,10 @@ class OverlayService : Service() {
     private var buttonNumber = 0
 
     private var modalView: ComposeView? = null
+
+    private var overlayGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
+
 
     override fun onCreate() {
         super.onCreate()
@@ -181,6 +186,14 @@ class OverlayService : Service() {
         val composeView = ComposeView(this).apply { isClickable = true }
         val lifecycleOwner = OverlayLifecyeOwner()
 
+        val metrics = resources.displayMetrics
+        val fabSize = (56* metrics.density).roundToInt()
+        var overlayWidth = 0
+        var overlayHeight =0
+        overlayGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            overlayWidth = composeView.width
+            overlayHeight = composeView.height
+        }
         composeView.setContent {
             ClickButton(
                 onMoveBy = { dragX, dragY ->
@@ -188,7 +201,14 @@ class OverlayService : Service() {
                     params.x += dragX
                     windowManager.updateViewLayout(composeView, params)
                 },
-                onRemove = {setModal() }, buttonNumber
+                onRemove = {
+                    val currentOverlayWidth = if(overlayWidth>0) overlayWidth else fabSize
+                    val currentOverlayHeight = if(overlayHeight>0) overlayHeight else fabSize
+
+                    val clickX = params.x + (currentOverlayWidth/2)
+                    val clickY = params.y + (currentOverlayHeight/2)
+
+                    toggleAutoClick(500,800,1000) }, buttonNumber
             )
         }
 

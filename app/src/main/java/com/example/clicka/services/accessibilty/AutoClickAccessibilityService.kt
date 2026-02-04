@@ -31,19 +31,18 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-
+        // no-op
     }
 
     override fun onInterrupt() {
-
+        Log.w(TAG, "Accessibility service interrupted")
     }
 
     override fun onDestroy() {
-        stopAutoClick()
+        stopAutoClick("onDestroy")
         instance = null
         scope.cancel()
         super.onDestroy()
-
     }
 
     suspend fun performClickAt(x: Int, y: Int, durationMs: Long = 50L): Boolean {
@@ -51,54 +50,64 @@ class AutoClickAccessibilityService : AccessibilityService() {
         val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
         val gesture = GestureDescription.Builder().addStroke(stroke).build()
         return try {
-            gestureExecutor.dispatchGesture(this, gesture)
+            val ok = gestureExecutor.dispatchGesture(this, gesture)
+            Log.d(TAG, "dispatchGesture result=$ok x=$x y=$y durationMs=$durationMs")
+            ok
         } catch (t: Throwable) {
-            Log.w(TAG, "Dispatch gesture failed", t)
+            Log.w(TAG, "dispatchGesture threw x=$x y=$y durationMs=$durationMs", t)
             false
         }
     }
 
+    fun startAutoClick(x: Int, y: Int, intervalMs: Long) {
+        val safeInterval = intervalMs.coerceAtLeast(50L)
 
-    fun performClickAsync(x: Int, y: Int, durationMs: Long = 50L) {
-        scope.launch { performClickAsync(x, y, durationMs) }
+        if (running.getAndSet(true)) {
+            Log.d(TAG, "startAutoClick ignored: already running")
+            return
+        }
 
+        Log.i(TAG, "startAutoClick x=$x y=$y intervalMs=$safeInterval")
 
-    }
-
-    fun startAutoClick(x: Int,y:Int,intervalMs: Long){
-        if(running.getAndSet(true)) return
         autoClickJob = scope.launch {
             try {
-                while (isActive){
-                    val ok =performClickAt(x,y)
-
-                    delay(intervalMs)
+                while (isActive) {
+                    val ok = performClickAt(x, y)
+                    if (!ok) {
+                        Log.w(TAG, "tap failed, stopping auto click")
+                        break
+                    }
+                    delay(safeInterval)
                 }
-            }finally {
+            } catch (t: Throwable) {
+                Log.e(TAG, "auto click loop crashed", t)
+            } finally {
                 running.set(false)
+                Log.i(TAG, "auto click loop ended")
             }
         }
     }
 
-    fun stopAutoClick(){
+    fun stopAutoClick(reason: String = "manual") {
+        Log.i(TAG, "stopAutoClick reason=$reason")
         autoClickJob?.cancel()
         autoClickJob = null
         running.set(false)
     }
 
-
-//    Help open accessibility settings if service not enabled
-
-    fun openAccessibilitySettings(){
+    // Help open accessibility settings if service not enabled
+    fun openAccessibilitySettings() {
+        Log.i(TAG, "opening accessibility settings")
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         startActivity(intent)
     }
 
-    fun isAutoClickRunning(): Boolean =running.get()
+    fun isAutoClickRunning(): Boolean = running.get()
 
-    fun toggleAutoClick(x:Int,y: Int,intervalMs: Long){
-        if (isAutoClickRunning()) stopAutoClick() else startAutoClick(x,y,intervalMs)
+    fun toggleAutoClick(x: Int, y: Int, intervalMs: Long) {
+        Log.i(TAG, "toggleAutoClick running=${isAutoClickRunning()} x=$x y=$y intervalMs=$intervalMs")
+        if (isAutoClickRunning()) stopAutoClick("toggle") else startAutoClick(x, y, intervalMs)
     }
 }
