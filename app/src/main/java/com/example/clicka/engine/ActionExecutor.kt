@@ -9,6 +9,7 @@ import com.example.clicka.actions.gesture.moveTo
 import com.example.clicka.base.AndroidExecutor
 import com.example.clicka.base.UnblockGestureScheduler
 import com.example.clicka.base.buildUnblockGesture
+import com.example.clicka.domain.model.Action
 
 
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +70,7 @@ class ActionExecutor @Inject constructor(
         val swipeGesture = GestureDescription.Builder().buildSingletonStroke(
             path = Path().apply {
                 line(
-                    from = swipe.fromPosition
+                    from = swipe.fromPosition,
                             to = swipe.toPosition,
                     random = random
                 )

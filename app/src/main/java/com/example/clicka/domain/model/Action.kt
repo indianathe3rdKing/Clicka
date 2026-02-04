@@ -32,7 +32,7 @@ sealed class Action : Identifiable {
                     isRepeatCountValid() && isRepeatDelayValid()
     }
 
-    data class swipe(
+    data class Swipe(
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
