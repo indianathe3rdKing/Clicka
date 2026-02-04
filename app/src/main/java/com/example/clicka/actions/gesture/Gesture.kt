@@ -9,6 +9,10 @@ import com.example.clicka.extensions.nextLongInOffset
 import com.example.clicka.extensions.safeLineTo
 import com.example.clicka.extensions.safeMoveTo
 
+import com.example.clicka.actions.utlis.*
+
+
+
 
 
 import kotlin.math.max
@@ -17,10 +21,7 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 
-internal const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5
-internal const val RANDOMIZATION_DURATION_MAX_OFFSET_MS = 5L
-internal const val MINIMUM_STROKE_DURATION_MS = 1L
-internal const val MAXIMUM_STROKE_DURATION_MS = 40L
+
 
 fun Path.moveTo(position: Point, random : Random?){
 
