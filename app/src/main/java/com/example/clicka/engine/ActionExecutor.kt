@@ -70,23 +70,23 @@ class ActionExecutor @Inject constructor(
             path = Path().apply {
                 line(
                     from = swipe.fromPosition
-                            to = swipe . toPosition,
+                            to = swipe.toPosition,
                     random = random
                 )
             },
-            durationMs =  swipe . swipeDurationMs,
-        random = random
+            durationMs = swipe.swipeDurationMs,
+            random = random
         )
         executeRepeatableGesture(swipeGesture, swipe)
     }
 
-    private suspend fun executePause(pause:Action.Pause){
+    private suspend fun executePause(pause: Action.Pause) {
         delay(pause.pauseDurationMs.getPauseDurationMs(random))
     }
 
-    private suspend fun executeRepeatableGesture(gesture: GestureDescription,repeatable: Repeat){
-        repeatable.repeat{
-            withContext<Unit>(Dispatchers.Main){
+    private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeat) {
+        repeatable.repeat {
+            withContext<Unit>(Dispatchers.Main) {
                 androidExecutor.executeGesture(gesture)
             }
         }

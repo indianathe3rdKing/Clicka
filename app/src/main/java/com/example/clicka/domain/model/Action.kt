@@ -1,6 +1,7 @@
 package com.example.clicka.domain.model
 
 import android.graphics.Point
+import com.example.clicka.base.identifier.Identifier
 
 
 sealed class Action : Identifiable {
