@@ -49,7 +49,7 @@ private fun Path.lineTo(position: Point,random: Random){
 fun GestureDescription.Builder.buildSingletonStroke(
     path:Path,
     durationMs: Long,
-    startTime: Long,
+    startTime: Long?,
     random:Random?
 ): GestureDescription{
     val actualDurationMs = random?.nextLongInOffset(durationMs,
@@ -59,7 +59,7 @@ fun GestureDescription.Builder.buildSingletonStroke(
         addStroke(
             GestureDescription.StrokeDescription(
                 path,
-                startTime.toNormalizedStrokeStartTime(),
+                startTime!!.toNormalizedStrokeStartTime(),
                 actualDurationMs.toNormalizedStrokeDurationMs()
 
             )
