@@ -11,6 +11,7 @@ import com.example.clicka.base.AndroidExecutor
 import com.example.clicka.base.UnblockGestureScheduler
 import com.example.clicka.base.buildUnblockGesture
 import com.example.clicka.domain.model.Action
+import com.example.clicka.domain.model.Repeatable
 
 
 import kotlinx.coroutines.Dispatchers
@@ -86,8 +87,8 @@ class ActionExecutor @Inject constructor(
         delay(pause.pauseDurationMs.getPauseDurationMs(random))
     }
 
-    private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeat) {
-        repeatable.repeat {
+    private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeatable) {
+        repeatable.repeatCount {
             withContext<Unit>(Dispatchers.Main) {
                 androidExecutor.executeGesture(gesture)
             }
