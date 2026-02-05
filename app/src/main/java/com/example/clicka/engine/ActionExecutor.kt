@@ -88,7 +88,7 @@ class ActionExecutor @Inject constructor(
     }
 
     private suspend fun executeRepeatableGesture(gesture: GestureDescription, repeatable: Repeatable) {
-        repeatable.repeatCount {
+        repeatable.repeat {
             withContext<Unit>(Dispatchers.Main) {
                 androidExecutor.executeGesture(gesture)
             }
