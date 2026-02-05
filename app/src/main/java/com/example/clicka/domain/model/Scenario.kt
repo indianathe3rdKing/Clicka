@@ -1,5 +1,6 @@
 package com.example.clicka.domain.model
 
+import com.example.clicka.base.ScenarioStats
 import com.example.clicka.base.identifier.Identifier
 import com.example.clicka.interfaces.Identifiable
 
@@ -9,11 +10,10 @@ data class Scenario(
     val Actions: List<Action> = emptyList(),
     override val repeatCount:Int,
 
-    val maxDuration:Int,
-    val isDurationMin:Int,
+    val maxDurationMin:Int,
     val isDurationInfinite: Boolean,
     val randomize: Boolean,
-    val state: ScenarioStats?=null,
+    val stats: ScenarioStats?=null,
     override val isRepeatIfinite: Boolean,
 
     ): Identifiable,Repeatable{
