@@ -1,6 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
@@ -41,6 +48,7 @@ android {
 
 dependencies {
     val voyagerVersion = "1.1.0-beta02"
+    val roomVersion = "2.6.1"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,4 +75,9 @@ dependencies {
 
     // javax.inject used by GestureExecutor annotations
     implementation("javax.inject:javax.inject:1")
+
+    // Room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 }
