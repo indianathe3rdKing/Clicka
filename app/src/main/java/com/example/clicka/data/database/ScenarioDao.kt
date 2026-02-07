@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScenarioDao{
@@ -69,7 +70,7 @@ interface ScenarioDao{
     * 7
  */
     @Update
-    suspend fun addScenario(Scenario: ScenarioEntity)
+    suspend fun updateScenario(Scenario: ScenarioEntity)
 
 /*
     *Delete a scenario from the database.

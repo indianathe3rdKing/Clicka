@@ -4,6 +4,7 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import com.example.clicka.base.ScenarioStats
 
 import javax.inject.Singleton
@@ -16,15 +17,17 @@ import javax.inject.Singleton
     ],
     version = DATABASE_VERSION,
     exportSchema = true,
-    autoMigrations = {
+    autoMigrations = [
         AutoMigration(from = 1, to=2)
-    }
+    ]
 
 )
 
-@TypeConverter(
-    ActionTypeStringConverter::class,
+@TypeConverters(
+    ActionTypeStringConverter::class
 )
+
+
 @Singleton
 abstract class Database: RoomDatabase(){
     abstract fun ScenarioDao(): ScenarioDao
