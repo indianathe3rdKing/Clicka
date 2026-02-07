@@ -5,7 +5,8 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
-import com.example.clicka.base
+import com.example.clicka.interfaces.EntityWithId
+
 import kotlinx.serialization.Serializable
 
 
@@ -19,7 +20,7 @@ data class ScenarioEntity(
     @ColumnInfo(name = "max_duration") val maxDurationMin: Long,
     @ColumnInfo(name = "is_duration_infinite") val isDurationInfinite: Boolean,
     @ColumnInfo(name = "randomize") val randomize: Boolean,
-)
+): EntityWithId
 
 
 @Serializable

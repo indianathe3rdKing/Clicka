@@ -33,7 +33,7 @@ internal fun Scenario.toEntity():ScenarioEntity =
         randomize = randomize
     )
 
-private fun ScenarioStatsEntity?.toDomain(): ScenarioStats =
+internal fun ScenarioStatsEntity?.toDomain(): ScenarioStats =
     if(this==null) ScenarioStats(
         lastStartTimestamp = 0,
         startCount = 0
