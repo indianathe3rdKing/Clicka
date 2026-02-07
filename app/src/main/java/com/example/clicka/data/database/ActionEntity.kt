@@ -26,17 +26,17 @@ import kotlinx.serialization.Serializable
 data class ActionEntity(
     @PrimaryKey(autoGenerate = true) override var id:Long,
     @ColumnInfo(name = "scenario_id") var scenarioId: Long,
-    @ColumnInfo(name = "name") var name: String,
-    @ColumnInfo(name = "type") val name: String,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "type") val type: ActionType,
     @ColumnInfo(name = "priority") val priority: Int,
 
 //    Only for repeatable actions
     @ColumnInfo(name = "repeat_count") val repeatCount:Int?= null,
     @ColumnInfo(name = "is_repeat_infinite") val isRepeatInfinite:Boolean?= null,
-    @ColumnInfo(name = "repeat_delay") val repeatFelay:Long?= null,
+    @ColumnInfo(name = "repeat_delay") val repeatDelay:Long?= null,
 
 //    ActionType.CLICK
-    @ColumnInfo(name = "press_duration") val pressDurantion:Long?=null,
+    @ColumnInfo(name = "press_duration") val pressDuration:Long?=null,
     @ColumnInfo(name = "x") val x: Int? = null,
     @ColumnInfo(name = "y") val y: Int? = null,
 

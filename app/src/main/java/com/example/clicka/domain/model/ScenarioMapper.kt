@@ -2,6 +2,9 @@ package com.example.clicka.domain.model
 
 import com.example.clicka.base.ScenarioStats
 import com.example.clicka.base.identifier.Identifier
+import com.example.clicka.data.database.ScenarioEntity
+import com.example.clicka.data.database.ScenarioStatsEntity
+import com.example.clicka.data.database.ScenarioWithActions
 
 
 internal fun ScenarioWithActions.toDomain(asDomain: Boolean=false):Scenario =
@@ -9,28 +12,28 @@ internal fun ScenarioWithActions.toDomain(asDomain: Boolean=false):Scenario =
         id= Identifier(id = scenario.id, asTemporary = asDomain),
         name= scenario.name,
         repeatCount= scenario.repeatCount,
-        isRepeatIfinite = scenario.maxDurationMin,
+        isRepeatIfinite = scenario.isRepeatInfinite,
         maxDurationMin = scenario.maxDurationMin,
         isDurationInfinite= scenario.isDurationInfinite,
-        randomize= scenario,randomize,
+        randomize= scenario.randomize,
         Actions = Actions
         .sortedBy {it.priority}
-        .map{ Action ->Action.toDomain(asDomain) },
+        .map{ action -> action.toDomain(asDomain) },
         stats= stats.toDomain(),
     )
 
 internal fun Scenario.toEntity():ScenarioEntity =
     ScenarioEntity(
-        id= id.databaseId,
-        name= name,
+        id = id.databaseId,
+        name = name,
         repeatCount = repeatCount,
-        isRepeatIfinite= isRepeatIfinite,
-        maxDurationMin= maxDurationMin,
-        isDurationInfinite= isDurationInfinite,
-        randomize=randomize
+        isRepeatInfinite = isRepeatIfinite,
+        maxDurationMin = maxDurationMin,
+        isDurationInfinite = isDurationInfinite,
+        randomize = randomize
     )
 
-private fun ScenarioStatsEntity?.toDomain() =
+private fun ScenarioStatsEntity?.toDomain(): ScenarioStats =
     if(this==null) ScenarioStats(
         lastStartTimestamp = 0,
         startCount = 0

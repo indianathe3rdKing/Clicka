@@ -4,19 +4,21 @@ import android.graphics.Point
 
 import com.example.clicka.base.identifier.DATABASE_ID_INSERTION
 import com.example.clicka.base.identifier.Identifier
+import com.example.clicka.data.database.ActionEntity
+import com.example.clicka.data.database.ActionType
 
 
 internal fun ActionEntity.toDomain(asDomain: Boolean=false): Action=when(type){
     ActionType.CLICK-> toDomainClick(asDomain)
-    ActionType.Swipe-> toDomainSwipe(asDomain)
-    ActionType.Pause-> toDomainPause(asDomain)
+    ActionType.SWIPE-> toDomainSwipe(asDomain)
+    ActionType.PAUSE-> toDomainPause(asDomain)
 
 }
 
 internal fun Action.toEntity(scenarioId: Long = DATABASE_ID_INSERTION):ActionEntity=when(this){
-    is Action-> toClickEntity(scenarioId)
-    is Action-> toSwipeEntity(scenarioId)
-    is Action-> toPauseEntity(scenarioId)
+    is Action.Click-> toClickEntity(scenarioId)
+    is Action.Swipe-> toSwipeEntity(scenarioId)
+    is Action.Pause-> toPauseEntity(scenarioId)
 }
 
 private fun ActionEntity.toDomainClick(asDomain:Boolean):Action.Click=
@@ -103,7 +105,7 @@ private fun Action.Pause.toPauseEntity(scenarioDbId:Long):ActionEntity{
         scenarioId= if (scenarioDbId != DATABASE_ID_INSERTION) scenarioDbId else scenarioId.databaseId,
         name=name,
         priority= priority,
-        type= ActionType.PAUSE,
+        type = ActionType.PAUSE,
         pauseDuration= pauseDurationMs,
     )
 }
