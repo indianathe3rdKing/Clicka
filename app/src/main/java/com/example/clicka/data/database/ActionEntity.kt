@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.Index
 import androidx.room.TypeConverter
+import com.example.clicka.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
 
 
@@ -60,7 +61,7 @@ enum class ActionType{
 }
 
 
-interface class ActionTypeStringConverter{
+internal class ActionTypeStringConverter{
     @TypeConverter
     fun fromString(value: String): ActionType=ActionType.valueOf(value)
     @TypeConverter
