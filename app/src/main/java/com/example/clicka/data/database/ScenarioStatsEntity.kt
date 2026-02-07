@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 
 
 @Entity(
-    tableName = "scenario_stata_tanle",
+    tableName = "scenario_stats_table",
     indices = [Index("scenario_id")],
     foreignKeys = [ForeignKey(
         entity = ScenarioEntity::class,

@@ -38,6 +38,6 @@ internal fun ScenarioStatsEntity?.toDomain(): ScenarioStats =
         lastStartTimestamp = 0,
         startCount = 0
     )else ScenarioStats(
-        lastStartTimestamp = lastStartTimestamp,
+        lastStartTimestamp = lastStartTimestampMs,
         startCount = startCount,
     )

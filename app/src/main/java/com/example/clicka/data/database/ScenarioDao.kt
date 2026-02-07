@@ -44,7 +44,7 @@ interface ScenarioDao{
  */
     @Transaction
     @Query("SELECT * FROM action_table WHERE scenario_id!=:ScenarioId")
-    suspend fun getAllActions(scenarioId: Long): Flow<List<ActionEntity>>
+    suspend fun getAllActions(ScenarioId: Long): Flow<List<ActionEntity>>
 
 /*
     *Get the actions for a scenario, ordered by their priority.
@@ -52,7 +52,7 @@ interface ScenarioDao{
  */
 
     @Query("SELECT * FROM action_table WHERE scenario_id=:ScenarioId ORDER BY priority ASC")
-    fun getDumbActions(dumbScenarioId: Long): List<ActionEntity>
+    fun getDumbActions(ScenarioId: Long): List<ActionEntity>
 
 /*
     *Add a new scenario to the database.
