@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 
 internal suspend fun Repeatable.repeat(action: suspend()-> Unit): Unit =
     when {
-        isRepeatIfinite-> while (true){
+        isRepeatInfinite-> while (true){
             action()
             delayNextActionIfNeeded()
         }

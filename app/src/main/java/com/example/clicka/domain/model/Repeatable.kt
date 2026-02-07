@@ -3,7 +3,7 @@ package com.example.clicka.domain.model
 
 interface Repeatable{
     val repeatCount: Int
-    val isRepeatIfinite: Boolean
+    val isRepeatInfinite: Boolean
 
     fun isRepeatCountValid():Boolean =
         repeatCount>0

@@ -14,7 +14,7 @@ data class Scenario(
     val isDurationInfinite: Boolean,
     val randomize: Boolean,
     val stats: ScenarioStats?=null,
-    override val isRepeatIfinite: Boolean,
+    override val isRepeatInfinite: Boolean,
 
     ): Identifiable,Repeatable{
     fun isValid():Boolean = name.isNotEmpty() && Actions.isNotEmpty()
