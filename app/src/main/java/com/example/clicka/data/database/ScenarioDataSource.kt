@@ -7,6 +7,7 @@ import com.example.clicka.domain.model.Action
 import com.example.clicka.domain.model.Scenario
 import com.example.clicka.domain.model.toDomain
 import com.example.clicka.domain.model.toEntity
+import com.example.clicka.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -22,15 +23,15 @@ class ScenarioDataSource @Inject constructor(
     private val actionUpdater = DatabaseListUpdater<Action, ActionEntity>()
 
     val getAllScenarios: Flow<List<Scenario>> =
-        scenarioDao.getScenariosWithActions()
+        scenarioDao.getScenariosWithActionFlow()
             .mapList{it.toDomain()}
 
     suspend fun getScenario(dbId: Long): Scenario?=
         scenarioDao.getScenariosWithActions(dbId)
             ?.toDomain()
 
-    fun getAllActionsExcept(scenarioId: Long): Flow<List<Action>> =
-        scenarioDao.getActionsExcept(scenarioId)
+    suspend fun getAllActionsExcept(scenarioId: Long): Flow<List<Action>> =
+        scenarioDao.getAllActionsExcept(scenarioId)
             .mapList{it.toDomain()}
 
     suspend fun addScenario(scenario: Scenario){

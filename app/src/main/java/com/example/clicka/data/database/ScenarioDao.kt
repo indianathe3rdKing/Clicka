@@ -44,7 +44,7 @@ interface ScenarioDao{
  */
     @Transaction
     @Query("SELECT * FROM action_table WHERE scenario_id!=:ScenarioId")
-    suspend fun getAllActions(ScenarioId: Long): Flow<List<ActionEntity>>
+    suspend fun getAllActionsExcept(ScenarioId: Long): Flow<List<ActionEntity>>
 
 /*
     *Get the actions for a scenario, ordered by their priority.
@@ -54,6 +54,10 @@ interface ScenarioDao{
     @Query("SELECT * FROM action_table WHERE scenario_id=:ScenarioId ORDER BY priority ASC")
     fun getActions(ScenarioId: Long): List<ActionEntity>
 
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addScenario(scenario: ScenarioEntity): Long
+
 /*
     *Add a new scenario to the database.
     *
@@ -61,7 +65,7 @@ interface ScenarioDao{
     * 6
  */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addScenario(Scenario: ScenarioEntity): Long
+    suspend fun addActions(actions: ScenarioEntity): Long
 
 /*
     *Add a new action to the database.
@@ -72,6 +76,10 @@ interface ScenarioDao{
     @Update
     suspend fun updateScenario(Scenario: ScenarioEntity)
 
+
+    @Update
+    suspend fun updateActions(actions:List<ActionEntity>)
+
 /*
     *Delete a scenario from the database.
     *
@@ -79,7 +87,7 @@ interface ScenarioDao{
     * 8
  */
     @Delete
-    suspend fun deleteAction(Actions: List<ActionEntity>)
+    suspend fun deleteActions(Actions: List<ActionEntity>)
 /*
     *Get a scenario stats
     *
@@ -87,7 +95,7 @@ interface ScenarioDao{
     * 9
  */
     @Query("SELECT * FROM scenario_stats_table WHERE id=:scenarioId")
-    suspend fun getScanarioStats(scenarioId: Long): ScenarioStatsEntity?
+    suspend fun getScenarioStats(scenarioId: Long): ScenarioStatsEntity?
 /*
     *Add a scenario stats.
     *
