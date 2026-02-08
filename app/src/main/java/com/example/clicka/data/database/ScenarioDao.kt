@@ -65,7 +65,7 @@ interface ScenarioDao{
     * 6
  */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addActions(actions: List<ActionEntity>): Long
+    suspend fun addActions(actions: List<ActionEntity>): List<Long>
 
 
     @Query("DELETE FROM scenario_table WHERE id= :scenarioId")
@@ -90,7 +90,7 @@ interface ScenarioDao{
     * 8
  */
     @Delete
-    suspend fun deleteActions(Actions: List<ActionEntity>)
+    suspend fun deleteActions(actions: List<ActionEntity>): Long
 /*
     *Get a scenario stats
     *

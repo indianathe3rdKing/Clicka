@@ -2,6 +2,7 @@ package com.example.clicka.data.database
 
 import android.util.Log
 import com.example.clicka.base.identifier.DATABASE_ID_INSERTION
+import com.example.clicka.base.workarounds.DatabaseListUpdater
 
 import com.example.clicka.domain.model.Action
 import com.example.clicka.domain.model.Scenario
@@ -117,7 +118,7 @@ class ScenarioDataSource @Inject constructor(
         updater.executeUpdate(
             addList = scenarioDao::addActions,
             updateList = scenarioDao::updateActions,
-            deleteList = scenarioDao::deleteActions,
+            removeList  = scenarioDao::deleteActions,
         )
     }
 
