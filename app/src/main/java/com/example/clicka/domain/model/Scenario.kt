@@ -7,17 +7,15 @@ import com.example.clicka.interfaces.Identifiable
 data class Scenario(
     override val id: Identifier,
     val name: String,
-    val Actions: List<Action> = emptyList(),
+    val actions: List<Action> = emptyList(),
     override val repeatCount:Int,
-
     val maxDurationMin:Long,
     val isDurationInfinite: Boolean,
     val randomize: Boolean,
     val stats: ScenarioStats?=null,
     override val isRepeatInfinite: Boolean,
-
     ): Identifiable,Repeatable{
-    fun isValid():Boolean = name.isNotEmpty() && Actions.isNotEmpty()
+    fun isValid():Boolean = name.isNotEmpty() && actions.isNotEmpty()
 }
 
 

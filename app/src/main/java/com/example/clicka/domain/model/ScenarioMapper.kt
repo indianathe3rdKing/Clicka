@@ -16,7 +16,7 @@ internal fun ScenarioWithActions.toDomain(asDomain: Boolean=false):Scenario =
         maxDurationMin = scenario.maxDurationMin,
         isDurationInfinite= scenario.isDurationInfinite,
         randomize= scenario.randomize,
-        Actions = Actions
+        actions = actions
         .sortedBy {it.priority}
         .map{ action -> action.toDomain(asDomain) },
         stats= stats.toDomain(),

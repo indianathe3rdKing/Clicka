@@ -52,7 +52,7 @@ interface ScenarioDao{
  */
 
     @Query("SELECT * FROM action_table WHERE scenario_id=:ScenarioId ORDER BY priority ASC")
-    fun getDumbActions(ScenarioId: Long): List<ActionEntity>
+    fun getActions(ScenarioId: Long): List<ActionEntity>
 
 /*
     *Add a new scenario to the database.
