@@ -18,7 +18,7 @@ interface ScenarioDao{
      */
     @Transaction
     @Query("SELECT * FROM scenario_table ORDER BY name ASC")
-    fun geScenariosWithActionsFlow(): Flow<List<ScenarioWithActions>>
+    fun getScenariosWithActionsFlow(): Flow<List<ScenarioWithActions>>
 /*
     *Get all scenarios and their actions.
     *
@@ -65,8 +65,11 @@ interface ScenarioDao{
     * 6
  */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun addActions(actions: ScenarioEntity): Long
+    suspend fun addActions(actions: List<ActionEntity>): Long
 
+
+    @Query("DELETE FROM scenario_table WHERE id= :scenarioId")
+    suspend fun deleteScenario(scenarioId: Long)
 /*
     *Add a new action to the database.
     *

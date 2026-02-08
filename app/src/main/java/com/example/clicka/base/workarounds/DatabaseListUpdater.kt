@@ -1,0 +1,110 @@
+package com.example.clicka.base.workarounds
+
+import androidx.annotation.VisibleForTesting
+import com.example.clicka.base.identifier.DATABASE_ID_INSERTION
+import com.example.clicka.interfaces.EntityWithId
+import com.example.clicka.interfaces.Identifiable
+import kotlin.collections.forEachIndexed
+
+
+class DatabaseListUpdater<Item : Identifiable, Entity : EntityWithId> {
+
+    //    The list of items to be added
+    @VisibleForTesting
+    internal val toBeAdded = UpdateList<Item, Entity>()
+
+    //        The list of items to be updated
+    @VisibleForTesting
+    internal val toBeUpdated = UpdateList<Item, Entity>()
+
+    //        The list of items to be removed
+    @VisibleForTesting
+    internal val toBeRemoved = mutableListOf<Entity>()
+
+    suspend fun refreshUpdateValues(
+        currentEntities: Collection<Entity>, newItems: Collection<Item>,
+        mappingClosure: suspend (Item) -> Entity
+    ) {
+//        Clear previous use values and init entities to be removed with all current entities
+
+        toBeAdded.clear()
+        toBeUpdated.clear()
+        toBeRemoved.apply {
+            clear()
+            addAll(currentEntities)
+        }
+
+        newItems.forEach { newItem ->
+            val newEntity = mappingClosure(newItem)
+            if (newEntity.id == DATABASE_ID_INSERTION) toBeAdded.add(newItem, newEntity)
+            else {
+                val oldItemIndex = toBeRemoved.indexOfFirst { it.id == newItem.id.databaseId }
+                if (oldItemIndex != -1) {
+                    toBeUpdated.add(newItem, newEntity)
+                    toBeRemoved.removeAt(oldItemIndex)
+                }
+            }
+        }
+    }
+
+    suspend fun executeUpdate(
+        addList: suspend (List<Entity>) -> List<Long>,
+        updateList: suspend (List<Entity>) -> Unit,
+        removeList: suspend (List<Entity>) -> Unit,
+        onSuccess: (suspend (
+            newIds: Map<Long, Long>, added: List<Item>, updated: List<Item>,
+            removed: List<Entity>
+        ) -> Unit)? = null,
+    ) {
+        val newIdsMapping = mutableMapOf<Long, Long>()
+        addList(toBeAdded.entities).forEachIndexed { index, dbId ->
+            toBeAdded.items[index].let { item ->
+                item.getDomainId()?.let { domainId -> newIdsMapping[domainId] = dbId }
+            }
+        }
+
+        updateList(toBeUpdated.entities)
+        removeList(toBeRemoved)
+
+        onSuccess?.invoke(newIdsMapping, toBeAdded.items, toBeUpdated.items, toBeRemoved)
+    }
+
+    fun clear() {
+        toBeAdded.clear()
+        toBeUpdated.clear()
+        toBeRemoved.clear()
+    }
+
+    override fun toString(): String =
+        "DatabaseListUpdater[toBeAdded=${toBeAdded.size}; toBeUpdated=${toBeUpdated.size}; toBeRemoved=${toBeRemoved.size}]"
+
+
+}
+
+@VisibleForTesting
+internal class UpdateList<Item, Entity> {
+
+    private val _items = mutableListOf<Item>()
+    val items: List<Item> = _items
+
+    private val _entities = mutableListOf<Entity>()
+    val entities: List<Entity> = _entities
+    val size: Int get() = _items.size
+    fun isEmpty(): Boolean = size == 0
+
+    fun add(item: Item,entity: Entity){
+        _items.clear()
+        _entities.add(entity)
+    }
+
+    fun clear(){
+        _items.clear()
+        _entities.clear()
+    }
+
+    fun forEach(closure: (Item,Entity)-> Unit): Unit =
+        items.forEachIndexed { index, item ->
+            closure(item,entities[index])
+        }
+
+}

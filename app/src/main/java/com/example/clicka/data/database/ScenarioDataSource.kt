@@ -23,7 +23,7 @@ class ScenarioDataSource @Inject constructor(
     private val actionUpdater = DatabaseListUpdater<Action, ActionEntity>()
 
     val getAllScenarios: Flow<List<Scenario>> =
-        scenarioDao.getScenariosWithActionFlow()
+        scenarioDao.getScenariosWithActionsFlow()
             .mapList{it.toDomain()}
 
     suspend fun getScenario(dbId: Long): Scenario?=
@@ -42,6 +42,11 @@ class ScenarioDataSource @Inject constructor(
             actions = scenario.actions,
         )
     }
+
+    suspend fun addScenarioCopy(scenarioDbId: Long,copyName: String?): Long? =
+        scenarioDao.getScenariosWithActions(scenarioDbId)?.let { scenarioWithActions ->
+            addScenarioCopy(scenarioWithActions,copyName)
+        }
 
     suspend fun addScenarioCopy(scenarioWithActions: ScenarioWithActions,copyName: String? = null): Long?{
         Log.d(TAG,"Add scenario to copy ${scenarioWithActions.scenario}")
@@ -70,7 +75,7 @@ class ScenarioDataSource @Inject constructor(
     }
 
     suspend fun markAsUsed(scenarioId: Long){
-        val previousStats = scenarioDao.getScanarioStats(scenarioId)
+        val previousStats = scenarioDao.getScenarioStats(scenarioId)
         if(previousStats != null){
             scenarioDao.updatedScenarioStats(
                 previousStats.copy(
