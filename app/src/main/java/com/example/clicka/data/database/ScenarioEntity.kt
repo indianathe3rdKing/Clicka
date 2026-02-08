@@ -30,7 +30,7 @@ data class ScenarioWithActions(
         parentColumn = "id",
         entityColumn = "scenario_id"
     )
-    val Actions: List<ActionEntity>,
+    val actions: List<ActionEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "scenario_id"

@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import androidx.room.Index
 import androidx.room.TypeConverter
 import com.example.clicka.interfaces.EntityWithId
 import kotlinx.serialization.Serializable
@@ -12,7 +11,6 @@ import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "action_table",
-    indices = [Index("action_id")],
     foreignKeys = [
         ForeignKey(
             entity = ScenarioEntity::class,
@@ -61,7 +59,7 @@ enum class ActionType{
 }
 
 
-internal class ActionTypeStringConverter{
+class ActionTypeStringConverter{
     @TypeConverter
     fun fromString(value: String): ActionType=ActionType.valueOf(value)
     @TypeConverter

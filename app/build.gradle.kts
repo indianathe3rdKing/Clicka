@@ -1,9 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.room)
-
+    id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.compose)
 }
 
 room {
@@ -44,11 +43,19 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
     val voyagerVersion = "1.1.0-beta02"
-    val roomVersion = "2.6.1"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -77,7 +84,7 @@ dependencies {
     implementation("javax.inject:javax.inject:1")
 
     // Room
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }
