@@ -43,8 +43,8 @@ interface ScenarioDao{
        * 4
  */
     @Transaction
-    @Query("SELECT * FROM action_table WHERE scenario_id!=:ScenarioId")
-    suspend fun getAllActionsExcept(ScenarioId: Long): Flow<List<ActionEntity>>
+    @Query("SELECT * FROM action_table WHERE scenario_id!=:scenarioId")
+fun getAllActionsExcept(scenarioId: Long): Flow<List<ActionEntity>>
 
 /*
     *Get the actions for a scenario, ordered by their priority.
@@ -90,7 +90,7 @@ interface ScenarioDao{
     * 8
  */
     @Delete
-    suspend fun deleteActions(actions: List<ActionEntity>): Long
+    suspend fun deleteActions(actions: List<ActionEntity>)
 /*
     *Get a scenario stats
     *

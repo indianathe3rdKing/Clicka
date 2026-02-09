@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
+    "version": 1,
     "identityHash": "6ef26c061720066693d4437e9be8bf24",
     "entities": [
       {
@@ -53,9 +53,7 @@
         ],
         "primaryKey": {
           "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
+          "columnNames": ["id"]
         }
       },
       {
@@ -155,17 +153,13 @@
         ],
         "primaryKey": {
           "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
+          "columnNames": ["id"]
         },
         "indices": [
           {
             "name": "index_action_table_scenario_id",
             "unique": false,
-            "columnNames": [
-              "scenario_id"
-            ],
+            "columnNames": ["scenario_id"],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_action_table_scenario_id` ON `${TABLE_NAME}` (`scenario_id`)"
           }
@@ -175,12 +169,8 @@
             "table": "scenario_table",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
-            "columns": [
-              "scenario_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
+            "columns": ["scenario_id"],
+            "referencedColumns": ["id"]
           }
         ]
       },
@@ -215,17 +205,13 @@
         ],
         "primaryKey": {
           "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
+          "columnNames": ["id"]
         },
         "indices": [
           {
             "name": "index_scenario_stats_table_scenario_id",
             "unique": false,
-            "columnNames": [
-              "scenario_id"
-            ],
+            "columnNames": ["scenario_id"],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_scenario_stats_table_scenario_id` ON `${TABLE_NAME}` (`scenario_id`)"
           }
@@ -235,12 +221,8 @@
             "table": "scenario_table",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
-            "columns": [
-              "scenario_id"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
+            "columns": ["scenario_id"],
+            "referencedColumns": ["id"]
           }
         ]
       }

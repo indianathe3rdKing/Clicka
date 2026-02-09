@@ -66,7 +66,7 @@ internal fun TopBar(
             ),
             containerColor = Color.Transparent
         ) {
-            Icon(imageVector = Icons.Filled.Add, null, tint = MaterialTheme.colorScheme.onSurface)
+            Icon(imageVector = Icons.Filled.Add, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 
