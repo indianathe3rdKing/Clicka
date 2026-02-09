@@ -40,6 +40,15 @@ import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
 import com.example.clicka.ui.theme.BorderColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.launch
 
 private val TAG = "Overlay"
 class OverlayService : Service() {
@@ -52,7 +61,8 @@ class OverlayService : Service() {
 
     private var overlayGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
-
+    private val autoClickScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private var autoClickJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -119,6 +129,8 @@ class OverlayService : Service() {
             }
         }
         overlayViews.clear()
+        autoClickJob?.cancel()
+        autoClickScope.cancel()
         super.onDestroy()
     }
 
@@ -210,7 +222,7 @@ class OverlayService : Service() {
                     val clickX = params.x + (currentOverlayWidth/2)
                     val clickY = params.y + (currentOverlayHeight/2)
                     Log.i(TAG, "clickX=$clickX clickY=$clickY")
-                    toggleAutoClick(clickX,clickY,1000) }, buttonNumber
+                    toggleAutoClick(550,800,1000) }, buttonNumber
             )
         }
 
@@ -309,15 +321,30 @@ class OverlayService : Service() {
 
 
 
-    fun toggleAutoClick(x:Int,y: Int,intervalMs: Long) {
+    fun toggleAutoClick(x: Int, y: Int, intervalMs: Long) {
         val svc = AutoClickAccessibilityService.instance
-        if (svc != null){
-            svc.toggleAutoClick(x,y,intervalMs)
-        }else{
+        if (svc == null) {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
+            return
+        }
+
+        if (autoClickJob?.isActive == true) {
+            autoClickJob?.cancel()
+            autoClickJob = null
+            return
+        }
+
+        val safeInterval = intervalMs.coerceAtLeast(50L)
+        autoClickJob = autoClickScope.launch {
+            while (true) {
+                currentCoroutineContext().ensureActive()
+                val ok = svc.performClickAt(x, y)
+                if (!ok) break
+                delay(safeInterval)
+            }
         }
     }
 }
