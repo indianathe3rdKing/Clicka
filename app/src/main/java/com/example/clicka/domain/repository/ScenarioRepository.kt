@@ -18,42 +18,41 @@ class ScenarioRepository @Inject constructor(
     override val scenarios: Flow<List<Scenario>> =
         scenarioDataSource.getAllScenarios
 
-    override suspend fun getScenario(dbId: Long): Scenario? {
+    override suspend fun getScenario(dbId: Long): Scenario? =
         scenarioDataSource.getScenario(dbId)
-    }
 
-    override fun getScenarioFlow(dbId: Long): Flow<Scenario?> {
+
+    override fun getScenarioFlow(dbId: Long): Flow<Scenario?> =
         scenarioDataSource.getScenarioFlow(dbId)
-    }
 
-    override fun getAllScenarioFlowExcept(dbId: Long): Flow<List<Action>> {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun addScenario(scenario: Scenario) {
-        TODO("Not yet implemented")
-    }
+    override fun getAllScenarioFlowExcept(dbId: Long): Flow<List<Action>> =
+        scenarioDataSource.getAllActionsExcept(dbId)
 
-    override suspend fun addScenarioCopy(scenario: ScenarioWithActions): Long? {
-        TODO("Not yet implemented")
-    }
+    override suspend fun addScenario(scenario: Scenario) =
+        scenarioDataSource.addScenario(scenario)
+
+
+    override suspend fun addScenarioCopy(scenario: ScenarioWithActions): Long? =
+        scenarioDataSource.addScenarioCopy(scenario)
+
 
     override suspend fun addScenarioCopy(
         scenarioId: Long,
         copyName: String
-    ): Long? {
-        TODO("Not yet implemented")
-    }
+    ): Long? =
+        scenarioDataSource.addScenarioCopy(scenarioId,copyName)
 
-    override suspend fun updateScenario(scenario: Scenario) {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun deleteScenario(scenario: Scenario) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun updateScenario(scenario: Scenario) =
+        scenarioDataSource.updateScenario(scenario)
 
-    override suspend fun markAsUsed(scenarioId: Identifier) {
-        TODO("Not yet implemented")
-    }
+
+    override suspend fun deleteScenario(scenario: Scenario) =
+        scenarioDataSource.deleteScenario(scenario)
+
+
+    override suspend fun markAsUsed(scenarioId: Identifier) =
+        scenarioDataSource.markAsUsed(scenarioId.databaseId)
+
 }

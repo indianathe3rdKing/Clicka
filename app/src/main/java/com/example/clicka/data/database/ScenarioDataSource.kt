@@ -36,7 +36,7 @@ class ScenarioDataSource @Inject constructor(
         scenarioDao.getScenariosWithActionFlow(dbId)
             .map{ it?.toDomain()}
 
-    suspend fun getAllActionsExcept(scenarioId: Long): Flow<List<Action>> =
+    fun getAllActionsExcept(scenarioId: Long): Flow<List<Action>> =
         scenarioDao.getAllActionsExcept(scenarioId)
             .mapList{it.toDomain()}
 
