@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.example.clicka.engine.ActionExecutor
 import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.extensions.SettingsModal
 import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
@@ -222,7 +223,9 @@ class OverlayService : Service() {
                     val clickX = params.x + (currentOverlayWidth/2)
                     val clickY = params.y + (currentOverlayHeight/2)
                     Log.i(TAG, "clickX=$clickX clickY=$clickY")
-                    toggleAutoClick(550,800,1000) }, buttonNumber
+                    ActionExecutor.executeClick(clickX, clickY)
+                    removeButton(composeView, lifecycleOwner)
+                }, buttonNumber
             )
         }
 
@@ -323,6 +326,8 @@ class OverlayService : Service() {
 
     fun toggleAutoClick(x: Int, y: Int, intervalMs: Long) {
         val svc = AutoClickAccessibilityService.instance
+
+
         if (svc == null) {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
