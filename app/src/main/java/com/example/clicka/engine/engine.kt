@@ -1,6 +1,7 @@
 package com.example.clicka.engine
 
 import android.util.Log
+import com.example.clicka.domain.model.Action
 import com.example.clicka.domain.model.Scenario
 import com.example.clicka.domain.repository.IScenarioRepository
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +66,12 @@ class Engine @Inject constructor(
                 }
             }
         }
+    }
+
+    fun tryAction(action: Action,completionListener:()-> Unit){
+        Log.i(TAG,"Try action $action")
+        onTryCompletedListener= completionListener
+        startEngine(action.toScenarioTry())
     }
 
 
