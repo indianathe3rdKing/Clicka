@@ -45,6 +45,15 @@ class Engine @Inject constructor(
     private val _isRunning: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isRunning: StateFlow<Boolean> = _isRunning
 
+    fun init(scenario: Scenario){
+        scenarioDbId.value = scenario.id.databaseId
+
+        processingScope=CoroutineScope(Dispatchers.IO)
+        processingScope?.launch {
+            repository.markAsUsed(scenario.id)
+        }
+    }
+
     fun startScenario(){
         if (_isRunning.value) return
 
