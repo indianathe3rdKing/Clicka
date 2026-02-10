@@ -223,8 +223,8 @@ class OverlayService : Service() {
                     val clickX = params.x + (currentOverlayWidth/2)
                     val clickY = params.y + (currentOverlayHeight/2)
                     Log.i(TAG, "clickX=$clickX clickY=$clickY")
-                    ActionExecutor.executeClick(clickX, clickY)
-                    removeButton(composeView, lifecycleOwner)
+                    toggleAutoClick(clickX, clickY, 100L)
+
                 }, buttonNumber
             )
         }

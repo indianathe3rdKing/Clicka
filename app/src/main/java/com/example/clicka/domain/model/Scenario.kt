@@ -9,7 +9,7 @@ data class Scenario(
     val name: String,
     val actions: List<Action> = emptyList(),
     override val repeatCount:Int,
-    val maxDurationMin:Long,
+    val maxDurationMin: Long,
     val isDurationInfinite: Boolean,
     val randomize: Boolean,
     val stats: ScenarioStats?=null,
