@@ -27,7 +27,7 @@ interface ScenarioDao{
  */
     @Transaction
     @Query("SELECT * FROM scenario_table WHERE id= :dbId")
-    suspend fun getScenariosWithActions(dbId: Long): ScenarioWithActions?
+    suspend fun getScenariosWithAction(dbId: Long): ScenarioWithActions?
 
 /*
     *Get the specified scenario with its actions
@@ -35,7 +35,7 @@ interface ScenarioDao{
     * 3
  */
     @Transaction
-    @Query("SELECT * FROM scenario_table WHERE id=:dbId")
+    @Query("SELECT * FROM scenario_table WHERE id= :dbId")
         fun getScenariosWithActionFlow(dbId: Long): Flow<ScenarioWithActions?>
 
 /*
