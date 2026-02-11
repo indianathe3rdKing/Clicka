@@ -223,7 +223,7 @@ class OverlayService : Service() {
                     val clickX = params.x + (currentOverlayWidth/2)
                     val clickY = params.y + (currentOverlayHeight/2)
                     Log.i(TAG, "clickX=$clickX clickY=$clickY")
-                    toggleAutoClick(clickX, clickY, 100L)
+                    toggleAutoClick(500, 800, 1200L)
 
                 }, buttonNumber
             )
