@@ -5,7 +5,7 @@ An Android auto-clicker application built with Kotlin, Jetpack Compose, and mode
 ## Screenshot
 
 <p align="center">
-  <img src="app/src/main/res/drawable/screenshot.jpg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/screenshot_clicka.jpg" alt="Clicka App Screenshot" width="300"/>
 </p>
 
 ## Features
