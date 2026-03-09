@@ -405,6 +405,7 @@ class OverlayService : Service() {
     /**
      * Remove the last added click button.
      */
+
     private fun removeLastButton() {
         if (buttonNumber <= 0) {
             Log.w(TAG, "No buttons to remove")
