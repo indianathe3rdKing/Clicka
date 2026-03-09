@@ -33,7 +33,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.example.clicka.engine.ActionExecutor
 import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.extensions.SettingsModal
 import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
@@ -41,15 +40,6 @@ import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
 import kotlin.math.roundToInt
 import com.example.clicka.ui.theme.BorderColor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.launch
 
 private val TAG = "Overlay"
 class OverlayService : Service() {
@@ -62,8 +52,12 @@ class OverlayService : Service() {
 
     private var overlayGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
-    private val autoClickScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private var autoClickJob: Job? = null
+    // Track click button positions: buttonNumber -> (x, y) center coordinates
+    private val clickButtonPositions = mutableMapOf<Int, Pair<Int, Int>>()
+    // Track click button views for removal
+    private val clickButtonViews = mutableMapOf<Int, Pair<ComposeView, OverlayLifecyeOwner>>()
+    // Track if auto-clicking is active (to show/hide buttons)
+    private var isAutoClicking = false
 
     override fun onCreate() {
         super.onCreate()
@@ -109,7 +103,9 @@ class OverlayService : Service() {
                         windowManager.updateViewLayout(composeView, params)
                     },
                     onClose = { stopSelf() },
-                    onAdd = { addButton() }
+                    onAdd = { addButton() },
+                    onPlay = { startAutoClickAllButtons() },
+                    onRemove = { removeLastButton() }
                 )
             }
         }
@@ -130,8 +126,8 @@ class OverlayService : Service() {
             }
         }
         overlayViews.clear()
-        autoClickJob?.cancel()
-        autoClickScope.cancel()
+        // Stop any running auto-click via accessibility service
+        AutoClickAccessibilityService.instance?.stopAutoClick()
         super.onDestroy()
     }
 
@@ -177,6 +173,7 @@ class OverlayService : Service() {
 
     private fun addButton() {
         buttonNumber++
+        val currentButtonNumber = buttonNumber
         val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
@@ -202,12 +199,24 @@ class OverlayService : Service() {
         val lifecycleOwner = OverlayLifecyeOwner()
 
         val metrics = resources.displayMetrics
-        val fabSize = (56* metrics.density).roundToInt()
-        var overlayWidth = 0
-        var overlayHeight =0
+        val fabSize = (40 * metrics.density).roundToInt()
+        var overlayWidth = fabSize
+        var overlayHeight = fabSize
+
+        // Initialize position tracking for this button
+        clickButtonPositions[currentButtonNumber] = Pair(
+            params.x + (overlayWidth / 2),
+            params.y + (overlayHeight / 2)
+        )
+
         overlayGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            overlayWidth = composeView.width
-            overlayHeight = composeView.height
+            overlayWidth = if (composeView.width > 0) composeView.width else fabSize
+            overlayHeight = if (composeView.height > 0) composeView.height else fabSize
+            // Update position when layout changes
+            clickButtonPositions[currentButtonNumber] = Pair(
+                params.x + (overlayWidth / 2),
+                params.y + (overlayHeight / 2)
+            )
         }
         composeView.setContent {
             ClickButton(
@@ -215,17 +224,17 @@ class OverlayService : Service() {
                     params.y += dragY
                     params.x += dragX
                     windowManager.updateViewLayout(composeView, params)
+                    // Update position when button is dragged
+                    clickButtonPositions[currentButtonNumber] = Pair(
+                        params.x + (overlayWidth / 2),
+                        params.y + (overlayHeight / 2)
+                    )
                 },
                 onRemove = {
-                    val currentOverlayWidth = if(overlayWidth>0) overlayWidth else fabSize
-                    val currentOverlayHeight = if(overlayHeight>0) overlayHeight else fabSize
-
-                    val clickX = params.x + (currentOverlayWidth/2)
-                    val clickY = params.y + (currentOverlayHeight/2)
-                    Log.i(TAG, "clickX=$clickX clickY=$clickY")
-                    toggleAutoClick(500, 800, 1200L)
-
-                }, buttonNumber
+                    // When clicked, just log position (could show settings in future)
+                    val pos = clickButtonPositions[currentButtonNumber]
+                    Log.i(TAG, "Button $currentButtonNumber clicked at position: $pos")
+                }, currentButtonNumber
             )
         }
 
@@ -233,6 +242,7 @@ class OverlayService : Service() {
 
         windowManager.addView(composeView, params)
         overlayViews[composeView] = lifecycleOwner
+        clickButtonViews[currentButtonNumber] = Pair(composeView, lifecycleOwner)
     }
 
     private fun setModal() {
@@ -324,11 +334,38 @@ class OverlayService : Service() {
 
 
 
-    fun toggleAutoClick(x: Int, y: Int, intervalMs: Long) {
+    /**
+     * Hide all click button overlays so gestures can reach the underlying app.
+     */
+    private fun hideClickButtons() {
+        clickButtonViews.values.forEach { (view, _) ->
+            try {
+                view.visibility = android.view.View.GONE
+            } catch (_: Throwable) {}
+        }
+    }
+
+    /**
+     * Show all click button overlays again.
+     */
+    private fun showClickButtons() {
+        clickButtonViews.values.forEach { (view, _) ->
+            try {
+                view.visibility = android.view.View.VISIBLE
+            } catch (_: Throwable) {}
+        }
+    }
+
+    /**
+     * Start/stop auto-clicking at all placed button positions.
+     * This is called when the user presses the "play" FAB button.
+     * Clicks are dispatched via Accessibility Service using the Engine architecture.
+     */
+    private fun startAutoClickAllButtons() {
         val svc = AutoClickAccessibilityService.instance
 
-
         if (svc == null) {
+            Log.w(TAG, "Accessibility service not running, opening settings")
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -336,20 +373,56 @@ class OverlayService : Service() {
             return
         }
 
-        if (autoClickJob?.isActive == true) {
-            autoClickJob?.cancel()
-            autoClickJob = null
+        if (clickButtonPositions.isEmpty()) {
+            Log.w(TAG, "No click buttons placed, nothing to auto-click")
             return
         }
 
-        val safeInterval = intervalMs.coerceAtLeast(50L)
-        autoClickJob = autoClickScope.launch {
-            while (true) {
-                currentCoroutineContext().ensureActive()
-                val ok = svc.performClickAt(x, y)
-                if (!ok) break
-                delay(safeInterval)
-            }
+        // Toggle: if already running, stop and show buttons again
+        if (svc.isRunning()) {
+            Log.i(TAG, "Stopping auto-click via Engine")
+            svc.stopAutoClick()
+            isAutoClicking = false
+            showClickButtons()
+            return
+        }
+
+        // Get all button positions sorted by button number (order of creation)
+        val positions = clickButtonPositions.toSortedMap().values.toList()
+        Log.i(TAG, "Starting auto-click for ${positions.size} buttons via Engine: $positions")
+
+        // Hide the click buttons so gestures reach the underlying app
+        isAutoClicking = true
+        hideClickButtons()
+
+        val intervalMs = 1000L // Default interval between full cycles
+        val clickDelayMs = 100L // Delay between individual clicks
+
+        // Use the Engine-based approach via the accessibility service
+        svc.startAutoClickWithPositions(positions, intervalMs, clickDelayMs)
+    }
+
+    /**
+     * Remove the last added click button.
+     */
+    private fun removeLastButton() {
+        if (buttonNumber <= 0) {
+            Log.w(TAG, "No buttons to remove")
+            return
+        }
+
+        val lastButtonNumber = buttonNumber
+        clickButtonViews[lastButtonNumber]?.let { (view, owner) ->
+            owner.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+            owner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            try {
+                windowManager.removeView(view)
+            } catch (_: Throwable) {}
+            overlayViews.remove(view)
+            clickButtonViews.remove(lastButtonNumber)
+            clickButtonPositions.remove(lastButtonNumber)
+            buttonNumber--
+            Log.i(TAG, "Removed button $lastButtonNumber")
         }
     }
 }

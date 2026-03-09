@@ -44,7 +44,9 @@ import com.example.clicka.services.overlayservice.OverlayService
 internal fun FloatingButton(
     onMoveBy: (dragX: Int, dragY: Int) -> Unit,
     onClose: () -> Unit,
-    onAdd: () -> Unit
+    onAdd: () -> Unit,
+    onPlay: () -> Unit,
+    onRemove: () -> Unit
 
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -65,7 +67,7 @@ internal fun FloatingButton(
             enter = fadeIn() + slideInVertically(initialOffsetY = { it }) + expandVertically(),
             exit = fadeOut() + slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
         ) {
-            fabComponent(ButtonInfoProvider.fabItems(onClose, onAdd))
+            fabComponent(ButtonInfoProvider.fabItems(onClose, onAdd, onPlay, onRemove))
 
         }
 

@@ -39,6 +39,9 @@ class AutoClickAccessibilityService : AccessibilityService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val gestureExecutor = GestureExecutor()
 
+    // Keep a reference to a running Engine so we can stop/release it
+    private var engineInstance: Engine? = null
+
     override fun onServiceConnected() {
         super.onServiceConnected()
         instance = this
@@ -55,192 +58,153 @@ class AutoClickAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         instance = null
+        stopAutoClick()
         serviceScope.cancel()
         super.onDestroy()
     }
 
     /**
-     * Single click entry point used by the domain engine.
+     * Check if auto-click scenario is currently running.
      */
-    suspend fun performClickAt(x: Int, y: Int, durationMs: Long = 50L): Boolean {
-        val path = android.graphics.Path().apply { moveTo(x.toFloat(), y.toFloat()) }
-        val stroke = GestureDescription.StrokeDescription(path, 0, durationMs)
-        val gesture = GestureDescription.Builder().addStroke(stroke).build()
+    fun isRunning(): Boolean = engineInstance?.isRunning?.value == true
 
-        return try {
-            val ok = gestureExecutor.dispatchGesture(this, gesture)
-            Log.d(TAG, "dispatchGesture result=$ok x=$x y=$y durationMs=$durationMs")
-            ok
-        } catch (t: Throwable) {
-            Log.w(TAG, "dispatchGesture threw x=$x y=$y durationMs=$durationMs", t)
-            false
+    /**
+     * Stop any running auto-click scenario.
+     */
+    fun stopAutoClick() {
+        engineInstance?.let { eng ->
+            if (eng.isRunning.value) {
+                eng.stopScenario()
+            }
+            eng.release()
+            engineInstance = null
+            Log.i(TAG, "Auto click stopped")
         }
     }
 
-    // Help open accessibility settings if service not enabled
-    fun openAccessibilitySettings() {
-        Log.i(TAG, "opening accessibility settings")
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        startActivity(intent)
-    }
-
-    // Accept coordinates so overlay can trigger a domain-based tryAction at a given point
-    suspend fun dAutoclick(x: Int, y: Int){
+    /**
+     * Start auto-clicking at multiple positions using the Engine architecture.
+     *
+     * @param positions List of (x, y) coordinates to click in order
+     * @param cycleDelayMs Delay between full cycles of all positions
+     * @param clickDelayMs Delay between individual clicks
+     * @param pressDurationMs How long each click press lasts
+     * @param randomize Whether to randomize timing
+     */
+    fun startAutoClickWithPositions(
+        positions: List<Pair<Int, Int>>,
+        cycleDelayMs: Long = 1000L,
+        clickDelayMs: Long = 100L,
+        pressDurationMs: Long = 50L,
+        randomize: Boolean = false
+    ) {
         try {
-            // build a domain Click action (hardcoded test values)
-            val scenarioId = Identifier(databaseId = 1L)
-            val click = Action.Click(
-                id = Identifier(databaseId = 1L),
-                scenarioId = scenarioId,
-                name = "MVP Click",
-                priority = 0,
-                repeatCount = 3,
-                isRepeatInfinite = false,
-                repeatDelayMs = 0L,
-                // use coordinates supplied by the overlay
-                position = Point(x, y),
-                pressDurationMs = 50L,
-            )
-
-            // AndroidExecutor adapter that delegates to this service's gesture dispatcher
-            val androidExecutor = object : AndroidExecutor {
-                override suspend fun executeGesture(gestureDescription: GestureDescription) {
-                    // delegate to existing GestureExecutor
-                    gestureExecutor.dispatchGesture(this@AutoClickAccessibilityService, gestureDescription)
-                }
-
-                override fun executeGlobalAction(globalAction: Int) {
-                    this@AutoClickAccessibilityService.performGlobalAction(globalAction)
-                }
+            // If an engine is already running, stop it first
+            if (isRunning()) {
+                stopAutoClick()
             }
 
-            // create an ActionExecutor using the adapter
-            val actionExecutor = ActionExecutor(androidExecutor)
-
-            // minimal repository stub - explicitly typed flows to satisfy interface
-            val repositoryStub = object : IScenarioRepository {
-                override val scenarios = flowOf<List<Scenario>>(emptyList())
-                override suspend fun getScenario(dbId: Long) = null
-                override fun getScenarioFlow(dbId: Long) = flowOf<Scenario?>(null)
-                override fun getAllScenarioFlowExcept(dbId: Long) = flowOf<List<Action>>(emptyList())
-                override suspend fun addScenario(scenario: Scenario) {}
-                override suspend fun addScenarioCopy(scenario: ScenarioWithActions) : Long? = null
-                override suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long? = null
-                override suspend fun updateScenario(scenario: Scenario) {}
-                override suspend fun deleteScenario(scenario: Scenario) {}
-                override suspend fun markAsUsed(scenarioId: Identifier) {}
+            if (positions.isEmpty()) {
+                Log.w(TAG, "No positions provided for auto-click")
+                return
             }
 
-            // construct engine with the action executor and stub repository
-            val engine = Engine(actionExecutor, repositoryStub)
+            val scenario = buildClickScenario(positions, cycleDelayMs, clickDelayMs, pressDurationMs, randomize)
+            val engine = createEngineWithScenario(scenario)
 
-            // Manually build a Scenario equivalent to Action.toScenarioTry() to avoid relying on internal extension
-            val finiteAction = click.copy(scenarioId = scenarioId, isRepeatInfinite = false)
-            val scenario = Scenario(
-                id = scenarioId,
-                name = "Try",
-                actions = listOf(finiteAction),
-                repeatCount = 1,
-                maxDurationMin = 1,
-                isDurationInfinite = false,
-                randomize = false,
-                stats = null,
-                isRepeatInfinite = false,
-            )
-
-            // Initialize engine processing scope with scenario
             engine.init(scenario)
+            engine.startScenario()
+            engineInstance = engine
 
-            // finally invoke tryAction
-            engine.tryAction(click) {
-                Log.i(TAG, "MVP click try completed")
-            }
+            Log.i(TAG, "Auto click started for ${positions.size} positions using Engine")
         } catch (t: Throwable) {
-            Log.w(TAG, "MVP click wiring failed", t)
+            Log.w(TAG, "startAutoClickWithPositions failed", t)
         }
     }
 
-    // Toggle domain-based auto-clicking at a given coordinate using the Engine
-    // Non-suspending helper so overlay can call it directly.
-    fun toggleAutoClickAt(x: Int, y: Int, intervalMs: Long) {
-        try {
-            // if an engine is already running, stop it
-            engineInstance?.let { eng ->
-                if (eng.isRunning.value) {
-                    eng.stopScenario()
-                    eng.release()
-                    engineInstance = null
-                    Log.i(TAG, "Auto click stopped")
-                    return
-                }
+    // ==================== Private Helper Methods ====================
+
+    /**
+     * Create an Engine instance with the AndroidExecutor adapter and a repository that holds the scenario.
+     */
+    private fun createEngineWithScenario(scenario: Scenario): Engine {
+        val androidExecutor = object : AndroidExecutor {
+            override suspend fun executeGesture(gestureDescription: GestureDescription) {
+                gestureExecutor.dispatchGesture(this@AutoClickAccessibilityService, gestureDescription)
             }
 
-            // Build AndroidExecutor adapter
-            val androidExecutor = object : AndroidExecutor {
-                override suspend fun executeGesture(gestureDescription: GestureDescription) {
-                    gestureExecutor.dispatchGesture(this@AutoClickAccessibilityService, gestureDescription)
-                }
-
-                override fun executeGlobalAction(globalAction: Int) {
-                    this@AutoClickAccessibilityService.performGlobalAction(globalAction)
-                }
+            override fun executeGlobalAction(globalAction: Int) {
+                this@AutoClickAccessibilityService.performGlobalAction(globalAction)
             }
+        }
 
-            val actionExecutor = ActionExecutor(androidExecutor)
+        val actionExecutor = ActionExecutor(androidExecutor)
 
-            // minimal repository stub
-            val repositoryStub = object : IScenarioRepository {
-                override val scenarios = flowOf<List<Scenario>>(emptyList())
-                override suspend fun getScenario(dbId: Long) = null
-                override fun getScenarioFlow(dbId: Long) = flowOf<Scenario?>(null)
-                override fun getAllScenarioFlowExcept(dbId: Long) = flowOf<List<Action>>(emptyList())
-                override suspend fun addScenario(scenario: Scenario) {}
-                override suspend fun addScenarioCopy(scenario: ScenarioWithActions) : Long? = null
-                override suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long? = null
-                override suspend fun updateScenario(scenario: Scenario) {}
-                override suspend fun deleteScenario(scenario: Scenario) {}
-                override suspend fun markAsUsed(scenarioId: Identifier) {}
-            }
+        // Repository that returns the scenario we created
+        val repositoryWithScenario = object : IScenarioRepository {
+            override val scenarios = flowOf(listOf(scenario))
+            override suspend fun getScenario(dbId: Long) = if (dbId == scenario.id.databaseId) scenario else null
+            override fun getScenarioFlow(dbId: Long) = flowOf(if (dbId == scenario.id.databaseId) scenario else null)
+            override fun getAllScenarioFlowExcept(dbId: Long) = flowOf<List<Action>>(emptyList())
+            override suspend fun addScenario(scenario: Scenario) {}
+            override suspend fun addScenarioCopy(scenario: ScenarioWithActions): Long? = null
+            override suspend fun addScenarioCopy(scenarioId: Long, copyName: String): Long? = null
+            override suspend fun updateScenario(scenario: Scenario) {}
+            override suspend fun deleteScenario(scenario: Scenario) {}
+            override suspend fun markAsUsed(scenarioId: Identifier) {}
+        }
 
-            val eng = Engine(actionExecutor, repositoryStub)
+        return Engine(actionExecutor, repositoryWithScenario)
+    }
 
-            // create a click Action using provided coordinates and make it repeat infinitely with interval
-            val scenarioId = Identifier(databaseId = 1L)
-            val click = Action.Click(
-                id = Identifier(databaseId = 1L),
+    /**
+     * Build a domain Scenario with Click actions for each position.
+     */
+    private fun buildClickScenario(
+        positions: List<Pair<Int, Int>>,
+        cycleDelayMs: Long,
+        clickDelayMs: Long,
+        pressDurationMs: Long,
+        randomize: Boolean
+    ): Scenario {
+        val scenarioId = Identifier(databaseId = System.currentTimeMillis())
+
+        // Create a Click action for each position
+        val clickActions = positions.mapIndexed { index, (x, y) ->
+            Action.Click(
+                id = Identifier(databaseId = scenarioId.databaseId + index + 1),
                 scenarioId = scenarioId,
-                name = "OverlayClick",
-                priority = 0,
-                repeatCount = 0,
-                isRepeatInfinite = true,
-                repeatDelayMs = intervalMs,
-                position = Point(x, y),
-                pressDurationMs = 50L
-            )
-
-            val scenario = Scenario(
-                id = scenarioId,
-                name = "OverlayAutoScenario",
-                actions = listOf(click),
+                name = "Click${index + 1}",
+                priority = index,
                 repeatCount = 1,
-                maxDurationMin = 60,
-                isDurationInfinite = true,
-                randomize = false,
-                stats = null,
-                isRepeatInfinite = true,
+                isRepeatInfinite = false,
+                repeatDelayMs = clickDelayMs,
+                position = Point(x, y),
+                pressDurationMs = pressDurationMs
             )
-
-            eng.init(scenario)
-            eng.startScenario()
-            engineInstance = eng
-            Log.i(TAG, "Auto click started at x=$x y=$y intervalMs=$intervalMs")
-        } catch (t: Throwable) {
-            Log.w(TAG, "toggleAutoClickAt failed", t)
         }
-    }
 
-    // Keep a reference to a running Engine so we can stop/release it
-    private var engineInstance: Engine? = null
+        // Add a pause action at the end of each cycle
+        val cycleDelayAction = Action.Pause(
+            id = Identifier(databaseId = scenarioId.databaseId + positions.size + 1),
+            scenarioId = scenarioId,
+            name = "CycleDelay",
+            priority = positions.size,
+            pauseDurationMs = cycleDelayMs
+        )
+
+        val allActions: List<Action> = clickActions + cycleDelayAction
+
+        return Scenario(
+            id = scenarioId,
+            name = "OverlayAutoClick",
+            actions = allActions,
+            repeatCount = 0,
+            maxDurationMin = 60,
+            isDurationInfinite = true,
+            randomize = randomize,
+            stats = null,
+            isRepeatInfinite = true
+        )
+    }
 }
