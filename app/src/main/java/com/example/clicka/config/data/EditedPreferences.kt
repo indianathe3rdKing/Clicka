@@ -12,7 +12,7 @@ internal fun Context.getConfigPreferences(): SharedPreferences =
     )
 
 /** @return the default duration for a click press */
-internal fun SharedPreferences.getClickClickPressDurationConfig(default: Long):Long=
+internal fun SharedPreferences.getClickPressDurationConfig(default: Long):Long=
     getLong(PREF_LAST_CLICK_PRESS_DURATION, default)
 
 /** Save a new default duration for a click press. */
@@ -46,15 +46,15 @@ internal fun SharedPreferences.Editor.putSwipeDurationConfig(durationMs: Long): 
     putLong(PREF_LAST_SWIPE_DURATION, durationMs)
 
 /** return the defaul repeat count for a swipe. */
-internal fun SharedPreferences.getSwipeRepeatCountConfig(default: Long): Long =
-    getLong(PREF_LAST_SWIPE_REPEAT_COUNT, default)
+internal fun SharedPreferences.getSwipeRepeatCountConfig(default: Int): Int =
+    getInt(PREF_LAST_SWIPE_REPEAT_COUNT, default)
 
 /** Save the new default repeat count for a swipe. */
 internal fun SharedPreferences.Editor.putSwipeRepeatCountConfig(durationMs: Long): SharedPreferences.Editor=
     putLong(PREF_LAST_SWIPE_REPEAT_COUNT, durationMs)
 
 /** return the defaul repeat delay for a swipe. */
-internal fun SharedPreferences.getSwipeRepeatRepeatDelayConfig(default: Long): Long =
+internal fun SharedPreferences.getSwipeRepeatDelayConfig(default: Long): Long =
     getLong(PREF_LAST_SWIPE_REPEAT_DELAY, default)
 
 /** Save the new default repeat delay for a swipe. */
