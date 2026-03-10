@@ -20,6 +20,10 @@ import kotlinx.coroutines.flow.flowOf
 import com.example.clicka.actions.gesture.GestureExecutor
 import com.example.clicka.base.AndroidExecutor
 import com.example.clicka.base.identifier.Identifier
+import com.example.clicka.config.domain.EditedActionBuilder
+import com.example.clicka.config.domain.getDefaultPauseDurationMs
+import com.example.clicka.config.data.getConfigPreferences
+import com.example.clicka.config.data.getRandomizeConfig
 import com.example.clicka.engine.ActionExecutor
 import com.example.clicka.engine.Engine
 import com.example.clicka.domain.model.Action
@@ -38,6 +42,7 @@ class AutoClickAccessibilityService : AccessibilityService() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     private val gestureExecutor = GestureExecutor()
+    private val actionBuilder = EditedActionBuilder()
 
     // Keep a reference to a running Engine so we can stop/release it
     private var engineInstance: Engine? = null
@@ -84,20 +89,11 @@ class AutoClickAccessibilityService : AccessibilityService() {
 
     /**
      * Start auto-clicking at multiple positions using the Engine architecture.
+     * Uses EditedActionBuilder to create Click actions with config values from SharedPreferences.
      *
      * @param positions List of (x, y) coordinates to click in order
-     * @param cycleDelayMs Delay between full cycles of all positions
-     * @param clickDelayMs Delay between individual clicks
-     * @param pressDurationMs How long each click press lasts
-     * @param randomize Whether to randomize timing
      */
-    fun startAutoClickWithPositions(
-        positions: List<Pair<Int, Int>>,
-        cycleDelayMs: Long = 1000L,
-        clickDelayMs: Long = 100L,
-        pressDurationMs: Long = 50L,
-        randomize: Boolean = false
-    ) {
+    fun startAutoClickWithPositions(positions: List<Pair<Int, Int>>) {
         try {
             // If an engine is already running, stop it first
             if (isRunning()) {
@@ -109,14 +105,18 @@ class AutoClickAccessibilityService : AccessibilityService() {
                 return
             }
 
-            val scenario = buildClickScenario(positions, cycleDelayMs, clickDelayMs, pressDurationMs, randomize)
+            // Convert positions to Points
+            val points = positions.map { (x, y) -> Point(x, y) }
+
+            // Build scenario using EditedActionBuilder (gets config from SharedPreferences)
+            val scenario = buildClickScenarioWithBuilder(points)
             val engine = createEngineWithScenario(scenario)
 
             engine.init(scenario)
             engine.startScenario()
             engineInstance = engine
 
-            Log.i(TAG, "Auto click started for ${positions.size} positions using Engine")
+            Log.i(TAG, "Auto click started for ${positions.size} positions using Engine + EditedActionBuilder")
         } catch (t: Throwable) {
             Log.w(TAG, "startAutoClickWithPositions failed", t)
         }
@@ -158,42 +158,23 @@ class AutoClickAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Build a domain Scenario with Click actions for each position.
+     * Build a domain Scenario with Click actions using EditedActionBuilder.
+     * This uses the config values from SharedPreferences (press duration, repeat count, etc.)
      */
-    private fun buildClickScenario(
-        positions: List<Pair<Int, Int>>,
-        cycleDelayMs: Long,
-        clickDelayMs: Long,
-        pressDurationMs: Long,
-        randomize: Boolean
-    ): Scenario {
+    private fun buildClickScenarioWithBuilder(points: List<Point>): Scenario {
         val scenarioId = Identifier(databaseId = System.currentTimeMillis())
 
-        // Create a Click action for each position
-        val clickActions = positions.mapIndexed { index, (x, y) ->
-            Action.Click(
-                id = Identifier(databaseId = scenarioId.databaseId + index + 1),
-                scenarioId = scenarioId,
-                name = "Click${index + 1}",
-                priority = index,
-                repeatCount = 1,
-                isRepeatInfinite = false,
-                repeatDelayMs = clickDelayMs,
-                position = Point(x, y),
-                pressDurationMs = pressDurationMs
-            )
-        }
+        actionBuilder.startEdition(scenarioId)
 
-        // Add a pause action at the end of each cycle
-        val cycleDelayAction = Action.Pause(
-            id = Identifier(databaseId = scenarioId.databaseId + positions.size + 1),
-            scenarioId = scenarioId,
-            name = "CycleDelay",
-            priority = positions.size,
-            pauseDurationMs = cycleDelayMs
-        )
+        val clickActions = actionBuilder.createNewClick(this, points)
 
-        val allActions: List<Action> = clickActions + cycleDelayAction
+        // Pause between cycles also comes from the same prefs (via defaults)
+        val pauseAction = actionBuilder.createNewPause(this).copy(priority = clickActions.size)
+
+        val allActions: List<Action> = clickActions + pauseAction
+
+        // Load randomize setting from SharedPreferences (default: true for anti-bot bypass)
+        val randomize = getConfigPreferences().getRandomizeConfig(true)
 
         return Scenario(
             id = scenarioId,
@@ -202,7 +183,7 @@ class AutoClickAccessibilityService : AccessibilityService() {
             repeatCount = 0,
             maxDurationMin = 60,
             isDurationInfinite = true,
-            randomize = randomize,
+            randomize = randomize,  // Use user's randomize preference
             stats = null,
             isRepeatInfinite = true
         )

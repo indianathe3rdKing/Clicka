@@ -46,7 +46,8 @@ internal fun FloatingButton(
     onClose: () -> Unit,
     onAdd: () -> Unit,
     onPlay: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    onSettings: () -> Unit = {}
 
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -67,7 +68,7 @@ internal fun FloatingButton(
             enter = fadeIn() + slideInVertically(initialOffsetY = { it }) + expandVertically(),
             exit = fadeOut() + slideOutVertically(targetOffsetY = { it }) + shrinkVertically()
         ) {
-            fabComponent(ButtonInfoProvider.fabItems(onClose, onAdd, onPlay, onRemove))
+            fabComponent(ButtonInfoProvider.fabItems(onClose, onAdd, onPlay, onRemove, onSettings))
 
         }
 
@@ -87,7 +88,7 @@ internal fun FloatingButton(
             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
         ) {
             Icon(
-                painter = painterResource(R.drawable.home), null,
+                painter = painterResource(R.drawable.house), null,
                 tint = Color.White
             )
         }

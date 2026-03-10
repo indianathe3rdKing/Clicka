@@ -24,8 +24,8 @@ internal fun SharedPreferences.getClickRepeatCountConfig(default: Int):Int =
     getInt(PREF_LAST_CLICK_REPEAT_COUNT, default)
 
 /** Save a new default repeat count for a click*/
-internal fun SharedPreferences.Editor.putClickRepeatCountConfig(durationMs: Long): SharedPreferences.Editor=
-    putLong(PREF_LAST_CLICK_REPEAT_COUNT,durationMs)
+internal fun SharedPreferences.Editor.putClickRepeatCountConfig(repeatCount: Int): SharedPreferences.Editor=
+    putInt(PREF_LAST_CLICK_REPEAT_COUNT, repeatCount)
 
 /** return the default repeat delay for a click */
 internal fun SharedPreferences.getClickRepeatDelayConfig(default: Long):Long =
@@ -85,3 +85,16 @@ private const val PREF_LAST_SWIPE_REPEAT_COUNT="last_swipe_repeat_count"
 private const val PREF_LAST_SWIPE_REPEAT_DELAY="last_swipe_repeat_delay"
 /** User last pause duration key in the SharedPreferences. */
 private const val PREF_LAST_PAUSE_DURATION="last_pause_duration"
+
+/** Randomize timing to bypass anti-bot detection */
+private const val PREF_RANDOMIZE_TIMING = "randomize_timing"
+
+// ================= Randomization Config =================
+
+/** @return whether to randomize timing (default TRUE for anti-bot bypass) */
+internal fun SharedPreferences.getRandomizeConfig(default: Boolean = true): Boolean =
+    getBoolean(PREF_RANDOMIZE_TIMING, default)
+
+/** Save whether to randomize timing */
+internal fun SharedPreferences.Editor.putRandomizeConfig(randomize: Boolean): SharedPreferences.Editor =
+    putBoolean(PREF_RANDOMIZE_TIMING, randomize)

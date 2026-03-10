@@ -36,10 +36,11 @@ object ButtonInfoProvider {
         )
     )
 
-    fun fabItems(onClose: () -> Unit, onAdd: () -> Unit, onPlay: () -> Unit, onRemove: () -> Unit): List<FABInfo> = listOf(
+    fun fabItems(onClose: () -> Unit, onAdd: () -> Unit, onPlay: () -> Unit, onRemove: () -> Unit, onSettings: () -> Unit = {}): List<FABInfo> = listOf(
         FABInfo(R.drawable.play, onPlay),
-        FABInfo(R.drawable.add_diamond, onAdd),
+        FABInfo(R.drawable.add, onAdd),
         FABInfo(R.drawable.remove_icon, onRemove),
+        FABInfo(R.drawable.settings_outline, onSettings),
         FABInfo(R.drawable.close, { onClose() })
     )
 

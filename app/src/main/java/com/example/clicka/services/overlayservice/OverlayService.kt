@@ -35,11 +35,23 @@ import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.example.clicka.extensions.FloatingButton
 import com.example.clicka.extensions.SettingsModal
+import com.example.clicka.extensions.AutoClickSettings
 import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
-import kotlin.math.roundToInt
 import com.example.clicka.ui.theme.BorderColor
+import com.example.clicka.config.data.getConfigPreferences
+import com.example.clicka.config.data.getClickPressDurationConfig
+import com.example.clicka.config.data.getClickRepeatCountConfig
+import com.example.clicka.config.data.getClickRepeatDelayConfig
+import com.example.clicka.config.data.getPauseDurationConfig
+import com.example.clicka.config.data.getRandomizeConfig
+import com.example.clicka.config.data.putClickPressDurationConfig
+import com.example.clicka.config.data.putClickRepeatDelayConfig
+import com.example.clicka.config.data.putPauseDurationConfig
+import com.example.clicka.config.data.putClickRepeatCountConfig
+import com.example.clicka.config.data.putRandomizeConfig
+import kotlin.math.roundToInt
 
 private val TAG = "Overlay"
 class OverlayService : Service() {
@@ -105,7 +117,8 @@ class OverlayService : Service() {
                     onClose = { stopSelf() },
                     onAdd = { addButton() },
                     onPlay = { startAutoClickAllButtons() },
-                    onRemove = { removeLastButton() }
+                    onRemove = { removeLastButton() },
+                    onSettings = { showSettingsModal() }
                 )
             }
         }
@@ -245,9 +258,7 @@ class OverlayService : Service() {
         clickButtonViews[currentButtonNumber] = Pair(composeView, lifecycleOwner)
     }
 
-    private fun setModal() {
-
-
+    private fun showSettingsModal() {
         if(modalView!= null) return
 
         val layoutFlag: Int = if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O ){
@@ -266,20 +277,42 @@ class OverlayService : Service() {
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL ,
             PixelFormat.TRANSLUCENT
         ).apply{
-            gravity = Gravity.TOP or Gravity.START
-            x =100
-            y=300
+            gravity = Gravity.CENTER
+            x = 0
+            y = 0
         }
         params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-
 
         val composeView = ComposeView(this).apply { isClickable = true }
         val lifecycleOwner = OverlayLifecyeOwner()
 
+        // Load current settings from SharedPreferences (same prefs that EditedActionBuilder uses)
+        val prefs = getConfigPreferences()
+        val initialSettings = AutoClickSettings(
+            pressDurationMs = prefs.getClickPressDurationConfig(50L),
+            repeatDelayMs = prefs.getClickRepeatDelayConfig(100L),
+            repeatCount = prefs.getClickRepeatCountConfig(1),
+            cycleDelayMs = prefs.getPauseDurationConfig(1000L),
+            randomize = prefs.getRandomizeConfig(true)
+        )
+
         composeView.setContent {
-//            TODO :  make the modal design
             ClickaTheme {
-                SettingsModal(onClose = { removeButton(composeView, lifecycleOwner) })
+                SettingsModal(
+                    initialSettings = initialSettings,
+                    onSave = { settings ->
+                        // Save settings to SharedPreferences (EditedActionBuilder will read these)
+                        getConfigPreferences().edit()
+                            .putClickPressDurationConfig(settings.pressDurationMs)
+                            .putClickRepeatDelayConfig(settings.repeatDelayMs)
+                            .putClickRepeatCountConfig(settings.repeatCount)
+                            .putPauseDurationConfig(settings.cycleDelayMs)
+                            .putRandomizeConfig(settings.randomize)
+                            .apply()
+                        Log.i(TAG, "Saved click settings: $settings")
+                    },
+                    onClose = { removeButton(composeView, lifecycleOwner) }
+                )
             }
         }
 
@@ -395,11 +428,9 @@ class OverlayService : Service() {
         isAutoClicking = true
         hideClickButtons()
 
-        val intervalMs = 1000L // Default interval between full cycles
-        val clickDelayMs = 100L // Delay between individual clicks
-
         // Use the Engine-based approach via the accessibility service
-        svc.startAutoClickWithPositions(positions, intervalMs, clickDelayMs)
+        // Config values (press duration, repeat count, etc.) come from SharedPreferences via EditedActionBuilder
+        svc.startAutoClickWithPositions(positions)
     }
 
     /**

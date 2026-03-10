@@ -1,6 +1,6 @@
 package com.example.clicka.extensions.components
 
-import com.example.clicka.engine.AutoClickConfig
+import com.example.clicka.extensions.AutoClickSettings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ScenarioSettings(settings: AutoClickConfig) {
+fun ScenarioSettings(settings: AutoClickSettings) {
 
-    var delayText by remember { mutableStateOf("") }
-    var intervalText by rememberSaveable { mutableStateOf("") }
+    var delayText by remember { mutableStateOf(settings.repeatDelayMs.toString()) }
+    var intervalText by rememberSaveable { mutableStateOf(settings.cycleDelayMs.toString()) }
 
     Card(
         modifier = Modifier.fillMaxWidth()
