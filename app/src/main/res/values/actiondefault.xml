@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="default_dumb_click_name" translatable="false">Click</string>
-    <integer name="default_dumb_click_press_duration">1</integer>
+    <integer name="default_dumb_click_press_duration">75</integer>
 
     <string name="default_dumb_swipe_name" translatable="false">Swipe</string>
     <integer name="default_dumb_swipe_duration">500</integer>
