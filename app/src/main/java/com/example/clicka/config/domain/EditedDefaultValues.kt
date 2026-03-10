@@ -23,11 +23,12 @@ internal fun Context.getDefaultClickDurationMs(): Long =
 internal fun Context.getDefaultClickRepeatCount(): Int = getConfigPreferences()
     .getClickRepeatCountConfig(1)
 
-internal fun Context.getDefaultClickRepeatDelay(): Int = getConfigPreferences()
+internal fun Context.getDefaultClickRepeatDelay(): Long = getConfigPreferences()
     .getClickRepeatDelayConfig(0)
 
 internal fun Context.getDefaultSwipeName(): String=
     getString(R.string.default_dumb_swipe_name  )
+internal fun Context.getDefaultSwipeDurationMs(): Long = getConfigPreferences()
     .getSwipeDurationConfig(resources.getInteger(R.integer.default_dumb_swipe_duration).toLong())
 
 internal fun Context.getDefaultSwipeRepeatCount():Int = getConfigPreferences()

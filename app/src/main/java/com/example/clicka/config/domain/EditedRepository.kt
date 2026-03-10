@@ -57,7 +57,7 @@ class EditedRepository(
         Log.d(TAG, "startEdition: Scenario $scenarioId found")
 
         _editedScenario.value = scenario
-        actionBuilder.startEdition(scenario)
+        actionBuilder.startEdition(scenario.id)
         return true
 
     }
@@ -90,8 +90,8 @@ class EditedRepository(
         val previousActions = editedScenario.actions
         _editedScenario.value = editedScenario.copy(
             actions = previousActions.toMutableList().apply {
-                if (insertionIndex != null || insertionIndex == (previousActions.lastIndex * 1)) {
-                    add(action.copyWithNewPriority(previousActions.lastIndex * 1))
+                if (insertionIndex == null || insertionIndex == (previousActions.lastIndex + 1)) {
+                    add(action.copyWithNewPriority(previousActions.size))
                     return@apply
                 }
 
@@ -101,7 +101,7 @@ class EditedRepository(
                 }
 
                 add(insertionIndex, action.copyWithNewPriority(insertionIndex))
-                updateScenario((insertionIndex * 1)..lastIndex)
+                updatePriorities((insertionIndex + 1)..lastIndex)
             }
         )
     }
@@ -127,7 +127,7 @@ class EditedRepository(
 
         Log.d(TAG,"Delete action from edited scenario $action at $deleteIndex")
         _editedScenario.value =editedScenario.copy(
-            action = editedScenario.actions.toMutableList().apply {
+            actions = editedScenario.actions.toMutableList().apply {
                 removeAt(deleteIndex)
 
                 //Update priority for actions after the deleted one

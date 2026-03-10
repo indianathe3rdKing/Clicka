@@ -28,8 +28,8 @@ internal fun SharedPreferences.Editor.putClickRepeatCountConfig(durationMs: Long
     putLong(PREF_LAST_CLICK_REPEAT_COUNT,durationMs)
 
 /** return the default repeat delay for a click */
-internal fun SharedPreferences.getClickRepeatDelayConfig(default: Int):Int =
-    getInt(PREF_LAST_CLICK_REPEAT_DELAY, default)
+internal fun SharedPreferences.getClickRepeatDelayConfig(default: Long):Long =
+    getLong(PREF_LAST_CLICK_REPEAT_DELAY, default)
 
 /** Save a new default repeat delay for a click*/
 internal fun SharedPreferences.Editor.putClickRepeatDelayConfig(durationMs: Long): SharedPreferences.Editor=
