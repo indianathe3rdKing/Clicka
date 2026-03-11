@@ -82,17 +82,13 @@ class OverlayService : Service() {
     }
 
     private fun showOverlay() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+        if (!Settings.canDrawOverlays(this)) {
             stopSelf()
             return
         }
 
-        val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val layoutFlag: Int =
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -205,12 +201,8 @@ class OverlayService : Service() {
     private fun addButton() {
         buttonNumber++
         val currentButtonNumber = buttonNumber
-        val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val layoutFlag: Int =
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECATION")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
 
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -279,12 +271,8 @@ class OverlayService : Service() {
     private fun showSettingsModal() {
         if (modalView != null) return
 
-        val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val layoutFlag: Int =
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            @Suppress("DEPRECAITON")
-            WindowManager.LayoutParams.TYPE_PHONE
-        }
 
 
         val params = WindowManager.LayoutParams(
