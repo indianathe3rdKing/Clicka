@@ -19,6 +19,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -69,6 +70,8 @@ class OverlayService : Service() {
 
     // Track click button positions: buttonNumber -> (x, y) center coordinates
     private val clickButtonPositions = mutableMapOf<Int, Pair<Int, Int>>()
+    private val swipePositions = mutableListOf<Pair<Int, Int>>()
+
 
     // Track click button views for removal
     private val clickButtonViews = mutableMapOf<Int, Pair<ComposeView, OverlayLifecyeOwner>>()
@@ -120,9 +123,11 @@ class OverlayService : Service() {
                         // Get the current mode WHEN the button is clicked, not when the overlay was created
                         val currentMode = ModeState.getCurrentMode()
                         Log.i(TAG, "onAdd clicked - currentMode: $currentMode, buttonNumber: $buttonNumber")
-                        if (currentMode == ClickMode.SINGLE && buttonNumber < 1) addButton()
-                        else if (currentMode != ClickMode.SINGLE) addButton()
-                        // else do nothing (return implicitly)
+                        when (currentMode) {
+                            ClickMode.SINGLE -> if (buttonNumber < 1) addButton()
+                            ClickMode.SWIPE -> if (buttonNumber < 2) addButton()
+                            ClickMode.MULTIPLE -> addButton()
+                        }
                     },
                     onPlay = {
                         // Get the current mode WHEN play is clicked
@@ -232,14 +237,34 @@ class OverlayService : Service() {
             params.y + (overlayHeight / 2)
         )
 
+        // For SWIPE mode, also track in swipePositions (max 2 points)
+        val currentMode = ModeState.getCurrentMode()
+        if (currentMode == ClickMode.SWIPE && swipePositions.size < 2) {
+            swipePositions.add(Pair(
+                params.x + (overlayWidth / 2),
+                params.y + (overlayHeight / 2)
+            ))
+            Log.i(TAG, "Added swipe point ${swipePositions.size}/2: ${swipePositions.last()}")
+        }
+
         overlayGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
             overlayWidth = if (composeView.width > 0) composeView.width else fabSize
             overlayHeight = if (composeView.height > 0) composeView.height else fabSize
             // Update position when layout changes
-            clickButtonPositions[currentButtonNumber] = Pair(
+            val newPos = Pair(
                 params.x + (overlayWidth / 2),
                 params.y + (overlayHeight / 2)
             )
+            clickButtonPositions[currentButtonNumber] = newPos
+
+            // Also update swipePositions if in SWIPE mode
+            val currentMode = ModeState.getCurrentMode()
+            if (currentMode == ClickMode.SWIPE) {
+                val index = currentButtonNumber - 1
+                if (index in swipePositions.indices) {
+                    swipePositions[index] = newPos
+                }
+            }
         }
         composeView.setContent {
             ClickButton(
@@ -248,10 +273,20 @@ class OverlayService : Service() {
                     params.x += dragX
                     windowManager.updateViewLayout(composeView, params)
                     // Update position when button is dragged
-                    clickButtonPositions[currentButtonNumber] = Pair(
+                    val newPos = Pair(
                         params.x + (overlayWidth / 2),
                         params.y + (overlayHeight / 2)
                     )
+                    clickButtonPositions[currentButtonNumber] = newPos
+
+                    // Also update swipePositions if in SWIPE mode
+                    val currentMode = ModeState.getCurrentMode()
+                    if (currentMode == ClickMode.SWIPE) {
+                        val index = currentButtonNumber - 1
+                        if (index in swipePositions.indices) {
+                            swipePositions[index] = newPos
+                        }
+                    }
                 },
                 onRemove = {
                     // When clicked, just log position (could show settings in future)
@@ -402,9 +437,9 @@ class OverlayService : Service() {
      * Clicks are dispatched via Accessibility Service using the Engine architecture.
      */
     private fun startAutoClickAllButtons() {
-        val svc = AutoClickAccessibilityService.instance
+        val service = AutoClickAccessibilityService.instance
 
-        if (svc == null) {
+        if (service == null) {
             Log.w(TAG, "Accessibility service not running, opening settings")
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -419,9 +454,9 @@ class OverlayService : Service() {
         }
 
         // Toggle: if already running, stop and show buttons again
-        if (svc.isRunning()) {
+        if (service.isRunning()) {
             Log.i(TAG, "Stopping auto-click via Engine")
-            svc.stopAutoClick()
+            service.stopAutoClick()
             isAutoClicking = false
             showClickButtons()
             return
@@ -437,7 +472,45 @@ class OverlayService : Service() {
 
         // Use the Engine-based approach via the accessibility service
         // Config values (press duration, repeat count, etc.) come from SharedPreferences via EditedActionBuilder
-        svc.startAutoClickWithPositions(positions)
+        service.startAutoClickWithPositions(positions)
+
+    }
+
+    private fun startAutoSwipeAllButtons() {
+        val service = AutoClickAccessibilityService.instance
+
+        if (service==null){
+            Log.w(TAG, "Accessibility service not running, opening settings")
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+            return
+        }
+
+        if(swipePositions.size<2){
+            Log.w(TAG, "No click buttons placed, nothing to auto-click")
+            return
+        }
+
+        //Toggle if already running, stop and show buttons again
+        if (service.isRunning()){
+            Log.i(TAG, "Stopping auto-click via Engine")
+            service.stopAutoClick()
+            isAutoClicking=false
+            showClickButtons()
+            return
+        }
+
+        val fromPoint=swipePositions[0]
+        val toPoint=swipePositions[1]
+
+        //Hide the click buttons so gestures reach the underlying app
+        isAutoClicking=true
+        hideClickButtons()
+
+        //Start the service
+        service.startAutoSwipeWithPositions(fromPoint,toPoint)
 
     }
 
@@ -462,6 +535,14 @@ class OverlayService : Service() {
             overlayViews.remove(view)
             clickButtonViews.remove(lastButtonNumber)
             clickButtonPositions.remove(lastButtonNumber)
+
+            // Also remove from swipePositions if in SWIPE mode
+            val currentMode = ModeState.getCurrentMode()
+            if (currentMode == ClickMode.SWIPE && swipePositions.isNotEmpty()) {
+                swipePositions.removeAt(swipePositions.size - 1)
+                Log.i(TAG, "Removed swipe point, remaining: ${swipePositions.size}")
+            }
+
             buttonNumber--
             Log.i(TAG, "Removed button $lastButtonNumber")
         }
@@ -479,7 +560,10 @@ class OverlayService : Service() {
                 Log.i(TAG, "Multiple Mode")
             }
 
-            ClickMode.SWIPE -> Log.i(TAG, "Swipe")
+            ClickMode.SWIPE -> {
+                startAutoSwipeAllButtons()
+                Log.i(TAG, "Swipe Mode")
+            }
         }
     }
 }

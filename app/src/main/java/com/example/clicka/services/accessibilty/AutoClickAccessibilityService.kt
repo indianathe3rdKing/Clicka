@@ -116,9 +116,40 @@ class AutoClickAccessibilityService : AccessibilityService() {
             engine.startScenario()
             engineInstance = engine
 
-            Log.i(TAG, "Auto click started for ${positions.size} positions using Engine + EditedActionBuilder")
+            Log.i(
+                TAG,
+                "Auto click started for ${positions.size} positions using Engine + EditedActionBuilder"
+            )
         } catch (t: Throwable) {
             Log.w(TAG, "startAutoClickWithPositions failed", t)
+        }
+    }
+
+    /**
+     * Start auto-swiping from one position to another using the Engine architecture.
+     * Uses EditedActionBuilder to create Swipe action with config values from SharedPreferences.
+     */
+    fun startAutoSwipeWithPositions(fromPosition: Pair<Int, Int>, toPosition: Pair<Int, Int>) {
+        try {
+            if (isRunning()) {
+                stopAutoClick()
+            }
+
+            // Convert positions to Points
+            val fromPoint = Point(fromPosition.first, fromPosition.second)
+            val toPoint = Point(toPosition.first, toPosition.second)
+
+            // Build scenario using EditedActionBuilder (gets config from SharedPreferences)
+            val scenario = buildSwipeScenarioWithBuilder(fromPoint, toPoint)
+            val engine = createEngineWithScenario(scenario)
+
+            engine.init(scenario)
+            engine.startScenario()
+            engineInstance = engine
+
+            Log.i(TAG, "Auto swipe started from $fromPosition to $toPosition using Engine + EditedActionBuilder")
+        } catch (t: Throwable) {
+            Log.w(TAG, "startAutoSwipeWithPositions failed", t)
         }
     }
 
@@ -130,7 +161,10 @@ class AutoClickAccessibilityService : AccessibilityService() {
     private fun createEngineWithScenario(scenario: Scenario): Engine {
         val androidExecutor = object : AndroidExecutor {
             override suspend fun executeGesture(gestureDescription: GestureDescription) {
-                gestureExecutor.dispatchGesture(this@AutoClickAccessibilityService, gestureDescription)
+                gestureExecutor.dispatchGesture(
+                    this@AutoClickAccessibilityService,
+                    gestureDescription
+                )
             }
 
             override fun executeGlobalAction(globalAction: Int) {
@@ -143,8 +177,12 @@ class AutoClickAccessibilityService : AccessibilityService() {
         // Repository that returns the scenario we created
         val repositoryWithScenario = object : IScenarioRepository {
             override val scenarios = flowOf(listOf(scenario))
-            override suspend fun getScenario(dbId: Long) = if (dbId == scenario.id.databaseId) scenario else null
-            override fun getScenarioFlow(dbId: Long) = flowOf(if (dbId == scenario.id.databaseId) scenario else null)
+            override suspend fun getScenario(dbId: Long) =
+                if (dbId == scenario.id.databaseId) scenario else null
+
+            override fun getScenarioFlow(dbId: Long) =
+                flowOf(if (dbId == scenario.id.databaseId) scenario else null)
+
             override fun getAllScenarioFlowExcept(dbId: Long) = flowOf<List<Action>>(emptyList())
             override suspend fun addScenario(scenario: Scenario) {}
             override suspend fun addScenarioCopy(scenario: ScenarioWithActions): Long? = null
@@ -184,6 +222,31 @@ class AutoClickAccessibilityService : AccessibilityService() {
             maxDurationMin = 60,
             isDurationInfinite = true,
             randomize = randomize,  // Use user's randomize preference
+            stats = null,
+            isRepeatInfinite = true
+        )
+    }
+
+    private fun buildSwipeScenarioWithBuilder(fromPoint: Point, toPoint: Point): Scenario {
+        val scenarioId = Identifier(databaseId = System.currentTimeMillis())
+
+        actionBuilder.startEdition(scenarioId)
+        val swipeAction = actionBuilder.createNewSwipe(this, fromPoint, toPoint)
+        //Pause between cycles also comes from the same prefs (via defaults)
+        val pauseAction = actionBuilder.createNewPause(this).copy(priority = 1)
+
+        val allActions: List<Action> = listOf(swipeAction, pauseAction)
+
+        //Load randomize setting from SharedPreferences (default: true for anti-bot bypass)
+        val randomize = getConfigPreferences().getRandomizeConfig(true)
+        return Scenario(
+            id = scenarioId,
+            name = "OverlayAutoSwipe",
+            actions = allActions,
+            repeatCount = 0,
+            maxDurationMin = 60,
+            isDurationInfinite = true,
+            randomize = randomize,
             stats = null,
             isRepeatInfinite = true
         )

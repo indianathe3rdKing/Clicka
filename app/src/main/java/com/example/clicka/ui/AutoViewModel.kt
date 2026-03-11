@@ -8,7 +8,6 @@ import com.example.clicka.domain.model.ClickMode
 import com.example.clicka.state.ModeState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 class AutoViewModel: ViewModel() {
 
