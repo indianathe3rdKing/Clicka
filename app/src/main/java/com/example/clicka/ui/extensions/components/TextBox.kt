@@ -1,4 +1,4 @@
-package com.example.clicka.extensions.components
+package com.example.clicka.ui.extensions.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box

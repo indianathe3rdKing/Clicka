@@ -1,10 +1,9 @@
-package com.example.clicka.extensions
+package com.example.clicka.ui.extensions
 
 import android.graphics.PointF
 import android.graphics.RectF
 
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 fun Random.nextFloat(from: Float,until: Float): Float =
     (until - from)* nextFloat()

@@ -1,4 +1,4 @@
-package com.example.clicka.screens.settings
+package com.example.clicka.ui.screens.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.clicka.extensions.TopBar
+import com.example.clicka.ui.extensions.TopBar
 
 object SettingsTab: Tab {
     override val options: TabOptions

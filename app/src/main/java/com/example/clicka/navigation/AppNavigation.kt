@@ -22,8 +22,8 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import com.example.clicka.screens.select.SelectTab
-import com.example.clicka.screens.settings.SettingsTab
+import com.example.clicka.ui.screens.select.SelectTab
+import com.example.clicka.ui.screens.settings.SettingsTab
 import com.example.clicka.ui.theme.ClickaTheme
 
 class MainActivity : ComponentActivity() {

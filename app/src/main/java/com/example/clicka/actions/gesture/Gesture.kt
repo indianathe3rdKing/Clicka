@@ -4,10 +4,10 @@ package com.example.clicka.actions.gesture
 import android.accessibilityservice.GestureDescription
 import android.graphics.Path
 import android.graphics.Point
-import com.example.clicka.extensions.nextIntInOffset
-import com.example.clicka.extensions.nextLongInOffset
-import com.example.clicka.extensions.safeLineTo
-import com.example.clicka.extensions.safeMoveTo
+import com.example.clicka.ui.extensions.nextIntInOffset
+import com.example.clicka.ui.extensions.nextLongInOffset
+import com.example.clicka.ui.extensions.safeLineTo
+import com.example.clicka.ui.extensions.safeMoveTo
 
 import com.example.clicka.actions.utlis.*
 
@@ -18,9 +18,6 @@ import com.example.clicka.actions.utlis.*
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
-import kotlin.random.nextInt
-
-
 
 
 fun Path.moveTo(position: Point, random : Random?){

@@ -1,4 +1,4 @@
-package com.example.clicka.extensions
+package com.example.clicka.ui.extensions
 
 import android.graphics.Path
 import kotlin.math.max

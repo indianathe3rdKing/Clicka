@@ -1,4 +1,4 @@
-package com.example.clicka.extensions
+package com.example.clicka.ui.extensions
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -35,10 +32,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.clicka.R
-import com.example.clicka.extensions.components.fabComponent
+import com.example.clicka.ui.extensions.components.fabComponent
 import com.example.clicka.index.ButtonInfoProvider
 import kotlin.math.roundToInt
-import com.example.clicka.services.overlayservice.OverlayService
 
 @Composable
 internal fun FloatingButton(

@@ -4,12 +4,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import com.example.clicka.R
+import com.example.clicka.domain.model.ClickMode
 import com.example.clicka.services.overlayservice.OverlayService
 
 data class ButtonInfo(
     val title: String,
     val description: String,
-    val icon: Int
+    val icon: Int,
+    val mode: ClickMode
 )
 
 
@@ -22,17 +24,20 @@ object ButtonInfoProvider {
         ButtonInfo(
             title = "Single",
             description = "Save the current document",
-            icon = R.drawable.single_point
+            icon = R.drawable.single_point,
+            mode = ClickMode.SINGLE
         ),
         ButtonInfo(
             title = "Multiple",
             description = "Delete the selected item",
-            icon = R.drawable.click_point
+            icon = R.drawable.click_point,
+            mode = ClickMode.MULTIPLE
         ),
         ButtonInfo(
             title = "Swipe",
             description = "Share with others",
-            icon = R.drawable.swipe
+            icon = R.drawable.swipe,
+            mode = ClickMode.SWIPE
         )
     )
 

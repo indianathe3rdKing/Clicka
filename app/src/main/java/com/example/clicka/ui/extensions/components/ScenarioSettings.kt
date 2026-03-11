@@ -1,6 +1,6 @@
-package com.example.clicka.extensions.components
+package com.example.clicka.ui.extensions.components
 
-import com.example.clicka.extensions.AutoClickSettings
+import com.example.clicka.ui.extensions.AutoClickSettings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

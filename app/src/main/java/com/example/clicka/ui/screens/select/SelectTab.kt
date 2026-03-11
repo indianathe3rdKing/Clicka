@@ -1,4 +1,4 @@
-package com.example.clicka.screens.select
+package com.example.clicka.ui.screens.select
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +12,8 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.example.clicka.extensions.ButtonComponent
-import com.example.clicka.extensions.TopBar
+import com.example.clicka.ui.extensions.ButtonComponent
+import com.example.clicka.ui.extensions.TopBar
 import com.example.clicka.index.ButtonInfoProvider
 
 object SelectTab : Tab {

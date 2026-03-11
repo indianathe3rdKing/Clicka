@@ -8,7 +8,7 @@ import com.example.clicka.domain.model.Action
 import com.example.clicka.domain.model.Scenario
 import com.example.clicka.domain.model.toDomain
 import com.example.clicka.domain.model.toEntity
-import com.example.clicka.extensions.mapList
+import com.example.clicka.ui.extensions.mapList
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

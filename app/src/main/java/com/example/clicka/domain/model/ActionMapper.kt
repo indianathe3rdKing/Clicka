@@ -110,4 +110,8 @@ private fun Action.Pause.toPauseEntity(scenarioDbId:Long):ActionEntity{
     )
 }
 
-
+enum class ClickMode{
+    SINGLE,
+    MULTIPLE,
+    SWIPE
+}

@@ -33,9 +33,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.example.clicka.extensions.FloatingButton
-import com.example.clicka.extensions.SettingsModal
-import com.example.clicka.extensions.AutoClickSettings
+import com.example.clicka.ui.extensions.FloatingButton
+import com.example.clicka.ui.extensions.SettingsModal
+import com.example.clicka.ui.extensions.AutoClickSettings
 import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
@@ -51,9 +51,12 @@ import com.example.clicka.config.data.putClickRepeatDelayConfig
 import com.example.clicka.config.data.putPauseDurationConfig
 import com.example.clicka.config.data.putClickRepeatCountConfig
 import com.example.clicka.config.data.putRandomizeConfig
+import com.example.clicka.domain.model.ClickMode
+import com.example.clicka.state.ModeState
 import kotlin.math.roundToInt
 
 private val TAG = "Overlay"
+
 class OverlayService : Service() {
     private val windowManager
         get() = getSystemService(WINDOW_SERVICE) as WindowManager
@@ -66,8 +69,10 @@ class OverlayService : Service() {
 
     // Track click button positions: buttonNumber -> (x, y) center coordinates
     private val clickButtonPositions = mutableMapOf<Int, Pair<Int, Int>>()
+
     // Track click button views for removal
     private val clickButtonViews = mutableMapOf<Int, Pair<ComposeView, OverlayLifecyeOwner>>()
+
     // Track if auto-clicking is active (to show/hide buttons)
     private var isAutoClicking = false
 
@@ -115,8 +120,19 @@ class OverlayService : Service() {
                         windowManager.updateViewLayout(composeView, params)
                     },
                     onClose = { stopSelf() },
-                    onAdd = { addButton() },
-                    onPlay = { startAutoClickAllButtons() },
+                    onAdd = {
+                        // Get the current mode WHEN the button is clicked, not when the overlay was created
+                        val currentMode = ModeState.getCurrentMode()
+                        Log.i(TAG, "onAdd clicked - currentMode: $currentMode, buttonNumber: $buttonNumber")
+                        if (currentMode == ClickMode.SINGLE && buttonNumber < 1) addButton()
+                        else if (currentMode != ClickMode.SINGLE) addButton()
+                        // else do nothing (return implicitly)
+                    },
+                    onPlay = {
+                        // Get the current mode WHEN play is clicked
+                        val currentMode = ModeState.getCurrentMode()
+                        mode(currentMode)
+                    },
                     onRemove = { removeLastButton() },
                     onSettings = { showSettingsModal() }
                 )
@@ -178,8 +194,10 @@ class OverlayService : Service() {
                 containerColor = Color(98, 97, 97, 52),
                 elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
             ) {
-                Text(ButtonNumber.toString(), color = MaterialTheme.colorScheme.onSurface ,
-                    fontWeight= FontWeight.Bold, fontSize = 18.sp)
+                Text(
+                    ButtonNumber.toString(), color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold, fontSize = 18.sp
+                )
             }
         }
     }
@@ -259,11 +277,11 @@ class OverlayService : Service() {
     }
 
     private fun showSettingsModal() {
-        if(modalView!= null) return
+        if (modalView != null) return
 
-        val layoutFlag: Int = if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O ){
+        val layoutFlag: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        }else{
+        } else {
             @Suppress("DEPRECAITON")
             WindowManager.LayoutParams.TYPE_PHONE
         }
@@ -274,9 +292,9 @@ class OverlayService : Service() {
             WindowManager.LayoutParams.WRAP_CONTENT,
             layoutFlag,
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL ,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             PixelFormat.TRANSLUCENT
-        ).apply{
+        ).apply {
             gravity = Gravity.CENTER
             x = 0
             y = 0
@@ -316,8 +334,8 @@ class OverlayService : Service() {
             }
         }
 
-        val viewModelStore= ViewModelStore()
-        val viewModelStoreOwner= object: ViewModelStoreOwner{
+        val viewModelStore = ViewModelStore()
+        val viewModelStoreOwner = object : ViewModelStoreOwner {
             override val viewModelStore: ViewModelStore
                 get() = viewModelStore
         }
@@ -366,7 +384,6 @@ class OverlayService : Service() {
     }
 
 
-
     /**
      * Hide all click button overlays so gestures can reach the underlying app.
      */
@@ -374,7 +391,8 @@ class OverlayService : Service() {
         clickButtonViews.values.forEach { (view, _) ->
             try {
                 view.visibility = android.view.View.GONE
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) {
+            }
         }
     }
 
@@ -385,7 +403,8 @@ class OverlayService : Service() {
         clickButtonViews.values.forEach { (view, _) ->
             try {
                 view.visibility = android.view.View.VISIBLE
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) {
+            }
         }
     }
 
@@ -431,6 +450,7 @@ class OverlayService : Service() {
         // Use the Engine-based approach via the accessibility service
         // Config values (press duration, repeat count, etc.) come from SharedPreferences via EditedActionBuilder
         svc.startAutoClickWithPositions(positions)
+
     }
 
     /**
@@ -449,12 +469,29 @@ class OverlayService : Service() {
             owner.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             try {
                 windowManager.removeView(view)
-            } catch (_: Throwable) {}
+            } catch (_: Throwable) {
+            }
             overlayViews.remove(view)
             clickButtonViews.remove(lastButtonNumber)
             clickButtonPositions.remove(lastButtonNumber)
             buttonNumber--
             Log.i(TAG, "Removed button $lastButtonNumber")
+        }
+    }
+
+    private fun mode(mode: ClickMode) {
+        when (mode) {
+            ClickMode.SINGLE -> {
+                startAutoClickAllButtons()
+                Log.i(TAG, "Single Mode")
+            }
+
+            ClickMode.MULTIPLE -> {
+                startAutoClickAllButtons()
+                Log.i(TAG, "Multiple Mode")
+            }
+
+            ClickMode.SWIPE -> Log.i(TAG, "Swipe")
         }
     }
 }

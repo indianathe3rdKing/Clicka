@@ -1,6 +1,6 @@
-package com.example.clicka.extensions
+package com.example.clicka.ui.extensions
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,25 +19,39 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.clicka.index.ButtonInfo
+import com.example.clicka.ui.AutoViewModel
 
 @Composable
 private fun ButtonCard(
     buttonInfo: ButtonInfo,
+    viewModel: AutoViewModel
 ) {
+    val selectedMode by viewModel.selectedMode
+    val isModeSelected by viewModel.modeSelected
+    val isSelected = isModeSelected && selectedMode == buttonInfo.mode
 
     Card(
-        onClick = {},
+        onClick = {
+            viewModel.updateMode(buttonInfo.mode)
+        },
         shape = MaterialTheme.shapes.large,
-        modifier = Modifier.padding(16.dp,6.dp)
+        modifier = Modifier
+            .padding(16.dp, 6.dp)
             .wrapContentHeight()
-
-        ) {
+            .border(
+                width = if (isSelected) 2.dp else 0.dp,
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.primary
+            )
+    ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -72,10 +86,7 @@ private fun ButtonCard(
                     buttonInfo.description, style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(0.86f)
                 )
-
             }
-
-
         }
     }
     Spacer(modifier = Modifier.height(6.dp))
@@ -84,11 +95,12 @@ private fun ButtonCard(
 @Composable
 internal fun ButtonComponent(
     buttonInfo: List<ButtonInfo>
-
 ) {
+    val viewModel: AutoViewModel = viewModel()
+
     LazyColumn {
         items(buttonInfo) { button ->
-            ButtonCard(button)
+            ButtonCard(button, viewModel)
         }
     }
 }

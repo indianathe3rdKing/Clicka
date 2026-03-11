@@ -1,4 +1,4 @@
-package com.example.clicka.extensions
+package com.example.clicka.ui.extensions
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
