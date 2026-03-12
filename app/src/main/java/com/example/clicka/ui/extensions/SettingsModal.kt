@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.clicka.ui.extensions.components.SettingsSwitchItem
 import com.example.clicka.ui.theme.BorderColor
 import com.example.clicka.ui.theme.PrimaryText
 import com.example.clicka.ui.theme.TranslucentBackground
@@ -56,10 +58,9 @@ internal fun SettingsModal(
     var repeatDelayText by rememberSaveable { mutableStateOf(initialSettings.repeatDelayMs.toString()) }
     var repeatCountText by rememberSaveable { mutableStateOf(initialSettings.repeatCount.toString()) }
     var cycleDelayText by rememberSaveable { mutableStateOf(initialSettings.cycleDelayMs.toString()) }
-    var randomizeText by rememberSaveable { mutableStateOf(initialSettings.randomize.toString()) }
+    var randomize by rememberSaveable { mutableStateOf(initialSettings.randomize) }
 
     Card(
-        onClick = {},
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .wrapContentWidth()
@@ -190,29 +191,11 @@ internal fun SettingsModal(
 
             Spacer(Modifier.height(12.dp))
 
-            OutlinedTextField(
-                value = randomizeText,
-                onValueChange = {
-                    if (it.all(Char::isDigit)) randomizeText = it
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-
-                label = { Text("Randomize (true/false)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
-                modifier = Modifier
-                ,
-                shape = MaterialTheme.shapes.large,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
-                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    focusedContainerColor = MaterialTheme.colorScheme.background,
-                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
-
-                )
+            SettingsSwitchItem(
+                checked = randomize,
+                onCheckedChange = {randomize=it},
+                label = "Randomize Timing",
+                description = "Add random variations to bypass anti-bot detection"
             )
 
             Spacer(Modifier.height(16.dp))
@@ -227,7 +210,7 @@ internal fun SettingsModal(
                             repeatDelayMs = repeatDelayText.toLongOrNull() ?: 100L,
                             repeatCount = (repeatCountText.toIntOrNull() ?: 1).coerceAtLeast(1),
                             cycleDelayMs = cycleDelayText.toLongOrNull() ?: 1000L,
-                            randomize = randomizeText.toBoolean()
+                            randomize = randomize
                         )
                         onSave(settings)
                         onClose()
