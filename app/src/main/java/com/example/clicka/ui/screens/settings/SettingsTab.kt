@@ -16,8 +16,15 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.example.clicka.ui.extensions.TopBar
 import com.example.clicka.config.data.*
+import com.example.clicka.ui.extensions.components.SaveButton
+import com.example.clicka.ui.extensions.components.SettingsSection
+import com.example.clicka.ui.extensions.components.SettingsSwitchItem
+import com.example.clicka.ui.extensions.components.SettingsTextField
 
 object SettingsTab: Tab {
+    @Suppress("unused")
+    private fun readResolve(): Any = SettingsTab
+
     override val options: TabOptions
 
         @Composable

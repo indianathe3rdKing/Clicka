@@ -17,6 +17,9 @@ import com.example.clicka.ui.extensions.TopBar
 import com.example.clicka.index.ButtonInfoProvider
 
 object SelectTab : Tab {
+    @Suppress("unused")
+    private fun readResolve(): Any = SelectTab
+
     override val options: TabOptions
         @Composable
         get() {
