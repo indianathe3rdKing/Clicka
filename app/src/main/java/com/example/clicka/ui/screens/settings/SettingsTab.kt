@@ -10,8 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import com.example.clicka.R
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -31,7 +32,7 @@ object SettingsTab: Tab {
         @Composable
         get(){
             val title = "Settings"
-            val icon = rememberVectorPainter(Icons.Default.Settings)
+            val icon = painterResource(R.drawable.settings_30)
 
             return remember{
                 TabOptions(

@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                                             RoundedCornerShape(24.dp)
                                         ),
                                     containerColor = MaterialTheme.colorScheme.inverseOnSurface.copy(0.2f),
-                                    tonalElevation = 2.dp
+                                    tonalElevation = 8.dp
                                 ) {
                                     TabNavigationItem(SelectTab)
                                     TabNavigationItem(SettingsTab)
@@ -85,18 +85,18 @@ private fun RowScope.TabNavigationItem(tab: Tab) {
             Icon(
                 painter = tab.options.icon!!, contentDescription = tab.options.title,
                 tint = if (isSelected) MaterialTheme.colorScheme.inverseOnSurface
-                else MaterialTheme.colorScheme.onSurface
+                else MaterialTheme.colorScheme.onSurface.copy(0.68f)
             )
         },
         label = {
             Text(
                 tab.options.title,
-                color = if (isSelected) MaterialTheme.colorScheme.onSurface.copy(0.68f)
-                else MaterialTheme.colorScheme.onSurface
+                color = if (isSelected) MaterialTheme.colorScheme.onSurface
+                else MaterialTheme.colorScheme.onSurface.copy(0.68f)
             )
         },
         colors = NavigationBarItemDefaults.colors(
-            indicatorColor = MaterialTheme.colorScheme.onSurface.copy(0.68f)
+            indicatorColor = MaterialTheme.colorScheme.onSurface
         )
     )
 }
