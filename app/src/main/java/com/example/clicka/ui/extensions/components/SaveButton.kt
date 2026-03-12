@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SaveButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     text: String = "Save Settings",
+    modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
     Button(
@@ -26,5 +26,4 @@ fun SaveButton(
         Text(text, style = MaterialTheme.typography.titleMedium)
     }
 }
-
 

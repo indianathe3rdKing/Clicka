@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.clicka.R
 import com.example.clicka.ui.extensions.components.fabComponent
 import com.example.clicka.index.ButtonInfoProvider
+import com.example.clicka.ui.theme.TranslucentBackground
 import kotlin.math.roundToInt
 
 @Composable
@@ -54,7 +55,7 @@ internal fun FloatingButton(
             .padding(16.dp)
             .wrapContentHeight()
             .wrapContentWidth()
-            .background(Color(98, 97, 97, 52), MaterialTheme.shapes.large),
+            .background(TranslucentBackground, MaterialTheme.shapes.large),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom
 

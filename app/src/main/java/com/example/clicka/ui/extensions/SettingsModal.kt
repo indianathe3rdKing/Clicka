@@ -1,6 +1,7 @@
 package com.example.clicka.ui.extensions
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -25,9 +28,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.clicka.ui.theme.BorderColor
+import com.example.clicka.ui.theme.PrimaryText
+import com.example.clicka.ui.theme.TranslucentBackground
 
 /**
  * Data class to hold auto-click settings (maps to existing click config preferences)
@@ -57,7 +63,10 @@ internal fun SettingsModal(
         shape = MaterialTheme.shapes.large,
         modifier = Modifier
             .wrapContentWidth()
-            .wrapContentHeight()
+            .wrapContentHeight(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
     ) {
         Column(
             modifier = Modifier
@@ -79,15 +88,22 @@ internal fun SettingsModal(
                 onValueChange = {
                     if (it.all(Char::isDigit)) pressDurationText = it
                 },
-                label = { Text("Press Duration (ms)") },
+                label = { Text("Press Duration (ms)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier,
+                modifier = Modifier
+                    ,
+                shape = MaterialTheme.shapes.large,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BorderColor,
-                    unfocusedBorderColor = BorderColor,
-                    focusedLabelColor = BorderColor,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = BorderColor
+                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
+
                 )
             )
 
@@ -98,14 +114,23 @@ internal fun SettingsModal(
                 onValueChange = {
                     if (it.all(Char::isDigit)) repeatDelayText = it
                 },
-                label = { Text("Repeat Delay (ms)") },
+
+                label = { Text("Repeat Delay (ms)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier
+                ,
+                shape = MaterialTheme.shapes.large,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BorderColor,
-                    unfocusedBorderColor = BorderColor,
-                    focusedLabelColor = BorderColor,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = BorderColor
+                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
+
                 )
             )
 
@@ -116,14 +141,23 @@ internal fun SettingsModal(
                 onValueChange = {
                     if (it.all(Char::isDigit)) repeatCountText = it
                 },
-                label = { Text("Repeat Count") },
+
+                label = { Text("Repeat Count", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier
+                ,
+                shape = MaterialTheme.shapes.large,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BorderColor,
-                    unfocusedBorderColor = BorderColor,
-                    focusedLabelColor = BorderColor,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = BorderColor
+                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
+
                 )
             )
 
@@ -134,14 +168,23 @@ internal fun SettingsModal(
                 onValueChange = {
                     if (it.all(Char::isDigit)) cycleDelayText = it
                 },
-                label = { Text("Cycle Delay (ms)") },
+
+                label = { Text("Cycle Delay (ms)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier
+                ,
+                shape = MaterialTheme.shapes.large,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BorderColor,
-                    unfocusedBorderColor = BorderColor,
-                    focusedLabelColor = BorderColor,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = BorderColor
+                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
+
                 )
             )
 
@@ -152,14 +195,23 @@ internal fun SettingsModal(
                 onValueChange = {
                     if (it.all(Char::isDigit)) randomizeText = it
                 },
-                label = { Text("Randomize (true/false)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+
+                label = { Text("Randomize (true/false)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Normal)},
+                modifier = Modifier
+                ,
+                shape = MaterialTheme.shapes.large,
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BorderColor,
-                    unfocusedBorderColor = BorderColor,
-                    focusedLabelColor = BorderColor,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-                    cursorColor = BorderColor
+                    focusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(0.6f),
+                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    cursorColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor  = MaterialTheme.colorScheme.background
+
                 )
             )
 
@@ -179,15 +231,23 @@ internal fun SettingsModal(
                         )
                         onSave(settings)
                         onClose()
-                    }
+                    },
+                    shape= MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    )
                 ) {
-                    Text("Save")
+                    Text("Save", color = MaterialTheme.colorScheme.onSurface)
                 }
 
                 Button(
-                    onClick = { onClose() }
+                    onClick = { onClose() },
+                    shape= MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                    )
                 ) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.error)
                 }
             }
         }

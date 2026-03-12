@@ -14,3 +14,6 @@ val Pink40 = Color(0xFF7D5260)
 val BorderColor = Color(0xFF9CA3AF)  // Cool neutral gray/whitish
 val AccentWhite = Color(0xFFF5F5F5)  // Off-white accent
 val GlassDark = Color(98, 97, 97, 52)
+
+val PrimaryText = Color.White
+val TranslucentBackground = Color(58, 57, 57, 178)

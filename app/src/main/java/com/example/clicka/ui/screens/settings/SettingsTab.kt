@@ -156,7 +156,7 @@ private fun SettingsScreen() {
                         .putClickRepeatCountConfig(clickRepeatCount.toIntOrNull() ?: 1)
                         .putClickRepeatDelayConfig(clickRepeatDelay.toLongOrNull() ?: 100L)
                         .putSwipeDurationConfig(swipeDuration.toLongOrNull() ?: 300L)
-                        .putSwipeRepeatCountConfig(swipeRepeatCount.toLongOrNull() ?: 1)
+                        .putSwipeRepeatCountConfig(swipeRepeatCount.toIntOrNull() ?: 1)
                         .putSwipeRepeatDelayConfig(swipeRepeatDelay.toLongOrNull() ?: 100L)
                         .putPauseDurationConfig(pauseDuration.toLongOrNull() ?: 1000L)
                         .putRandomizeConfig(randomize)

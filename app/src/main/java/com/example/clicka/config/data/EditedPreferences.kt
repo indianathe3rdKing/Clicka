@@ -50,8 +50,8 @@ internal fun SharedPreferences.getSwipeRepeatCountConfig(default: Int): Int =
     getInt(PREF_LAST_SWIPE_REPEAT_COUNT, default)
 
 /** Save the new default repeat count for a swipe. */
-internal fun SharedPreferences.Editor.putSwipeRepeatCountConfig(durationMs: Long): SharedPreferences.Editor=
-    putLong(PREF_LAST_SWIPE_REPEAT_COUNT, durationMs)
+internal fun SharedPreferences.Editor.putSwipeRepeatCountConfig(repeatCount: Int): SharedPreferences.Editor=
+    putInt(PREF_LAST_SWIPE_REPEAT_COUNT, repeatCount)
 
 /** return the defaul repeat delay for a swipe. */
 internal fun SharedPreferences.getSwipeRepeatDelayConfig(default: Long): Long =

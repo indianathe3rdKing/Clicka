@@ -46,10 +46,12 @@ private fun ButtonCard(
         modifier = Modifier
             .padding(16.dp, 6.dp)
             .wrapContentHeight()
-            .border(
-                width = if (isSelected) 2.dp else 0.dp,
-                shape = MaterialTheme.shapes.large,
-                color = MaterialTheme.colorScheme.primary
+            .then(
+                if (isSelected) Modifier.border(
+                    width = 2.dp,
+                    shape = MaterialTheme.shapes.large,
+                    color = MaterialTheme.colorScheme.onSurface.copy(0.86f)
+                )else Modifier
             )
     ) {
         Row(
