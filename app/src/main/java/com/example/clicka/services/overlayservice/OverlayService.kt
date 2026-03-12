@@ -3,31 +3,13 @@ package com.example.clicka.services.overlayservice
 import android.app.Service
 import android.content.Intent
 import android.graphics.PixelFormat
-import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.ViewTreeObserver
 import android.view.WindowManager
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -40,7 +22,6 @@ import com.example.clicka.ui.extensions.AutoClickSettings
 import com.example.clicka.services.accessibilty.AutoClickAccessibilityService
 import com.example.clicka.services.overlaylifecycleowner.OverlayLifecyeOwner
 import com.example.clicka.ui.theme.ClickaTheme
-import com.example.clicka.ui.theme.BorderColor
 import com.example.clicka.config.data.getConfigPreferences
 import com.example.clicka.config.data.getClickPressDurationConfig
 import com.example.clicka.config.data.getClickRepeatCountConfig
@@ -55,6 +36,7 @@ import com.example.clicka.config.data.putRandomizeConfig
 import com.example.clicka.domain.model.ClickMode
 import com.example.clicka.state.ModeState
 import kotlin.math.roundToInt
+import com.example.clicka.ui.extensions.components.ClickButton
 
 private val TAG = "Overlay"
 
@@ -122,7 +104,10 @@ class OverlayService : Service() {
                     onAdd = {
                         // Get the current mode WHEN the button is clicked, not when the overlay was created
                         val currentMode = ModeState.getCurrentMode()
-                        Log.i(TAG, "onAdd clicked - currentMode: $currentMode, buttonNumber: $buttonNumber")
+                        Log.i(
+                            TAG,
+                            "onAdd clicked - currentMode: $currentMode, buttonNumber: $buttonNumber"
+                        )
                         when (currentMode) {
                             ClickMode.SINGLE -> if (buttonNumber < 1) addButton()
                             ClickMode.SWIPE -> if (buttonNumber < 2) addButton()
@@ -132,7 +117,10 @@ class OverlayService : Service() {
                     onPlay = {
                         // Get the current mode WHEN play is clicked
                         val currentMode = ModeState.getCurrentMode()
-                        mode(currentMode)
+                        if (buttonNumber >  1 && currentMode == ClickMode.SINGLE) {
+                            removeLastButton()
+                        } else
+                            mode(currentMode)
                     },
                     onRemove = { removeLastButton() },
                     onSettings = { showSettingsModal() }
@@ -165,43 +153,6 @@ class OverlayService : Service() {
         return null
     }
 
-    @Composable
-    private fun ClickButton(
-        onMoveBy: (dragX: Int, dragY: Int) -> Unit,
-        onRemove: () -> Unit, ButtonNumber: Int
-    ) {
-
-        ClickaTheme {
-            FloatingActionButton(
-                onClick = { onRemove() },
-
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            onMoveBy(
-                                dragAmount.x.roundToInt(),
-                                dragAmount.y.roundToInt()
-                            )
-                        }
-                    }
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(25.dp))
-                    .border(
-                        2.dp,
-                        BorderColor,
-                        RoundedCornerShape(20.dp)
-                    ),
-                containerColor = Color(98, 97, 97, 52),
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-            ) {
-                Text(
-                    ButtonNumber.toString(), color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold, fontSize = 18.sp
-                )
-            }
-        }
-    }
 
     private fun addButton() {
         buttonNumber++
@@ -240,10 +191,12 @@ class OverlayService : Service() {
         // For SWIPE mode, also track in swipePositions (max 2 points)
         val currentMode = ModeState.getCurrentMode()
         if (currentMode == ClickMode.SWIPE && swipePositions.size < 2) {
-            swipePositions.add(Pair(
-                params.x + (overlayWidth / 2),
-                params.y + (overlayHeight / 2)
-            ))
+            swipePositions.add(
+                Pair(
+                    params.x + (overlayWidth / 2),
+                    params.y + (overlayHeight / 2)
+                )
+            )
             Log.i(TAG, "Added swipe point ${swipePositions.size}/2: ${swipePositions.last()}")
         }
 
@@ -459,6 +412,7 @@ class OverlayService : Service() {
             service.stopAutoClick()
             isAutoClicking = false
             showClickButtons()
+            ModeState.updateIsRunning(false)
             return
         }
 
@@ -473,13 +427,13 @@ class OverlayService : Service() {
         // Use the Engine-based approach via the accessibility service
         // Config values (press duration, repeat count, etc.) come from SharedPreferences via EditedActionBuilder
         service.startAutoClickWithPositions(positions)
-
+        ModeState.updateIsRunning(true)
     }
 
     private fun startAutoSwipeAllButtons() {
         val service = AutoClickAccessibilityService.instance
 
-        if (service==null){
+        if (service == null) {
             Log.w(TAG, "Accessibility service not running, opening settings")
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -488,29 +442,31 @@ class OverlayService : Service() {
             return
         }
 
-        if(swipePositions.size<2){
+        if (swipePositions.size < 2) {
             Log.w(TAG, "No click buttons placed, nothing to auto-click")
             return
         }
 
         //Toggle if already running, stop and show buttons again
-        if (service.isRunning()){
+        if (service.isRunning()) {
             Log.i(TAG, "Stopping auto-click via Engine")
             service.stopAutoClick()
-            isAutoClicking=false
+            isAutoClicking = false
             showClickButtons()
+            ModeState.updateIsRunning(false)
             return
         }
 
-        val fromPoint=swipePositions[0]
-        val toPoint=swipePositions[1]
+        val fromPoint = swipePositions[0]
+        val toPoint = swipePositions[1]
 
         //Hide the click buttons so gestures reach the underlying app
-        isAutoClicking=true
+        isAutoClicking = true
         hideClickButtons()
 
         //Start the service
-        service.startAutoSwipeWithPositions(fromPoint,toPoint)
+        service.startAutoSwipeWithPositions(fromPoint, toPoint)
+        ModeState.updateIsRunning(true)
 
     }
 

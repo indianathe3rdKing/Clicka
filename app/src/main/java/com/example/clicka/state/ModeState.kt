@@ -16,6 +16,14 @@ object ModeState {
     private val _modeSelected = MutableStateFlow(false)
     val modeSelected: StateFlow<Boolean> = _modeSelected.asStateFlow()
 
+    private val _isRunning = MutableStateFlow(false)
+    val isRunning: StateFlow<Boolean> = _isRunning.asStateFlow()
+
+
+    fun updateIsRunning(isRunning: Boolean) {
+        _isRunning.value = isRunning
+    }
+
     fun updateMode(mode: ClickMode) {
         _selectedMode.value = mode
         _modeSelected.value = true

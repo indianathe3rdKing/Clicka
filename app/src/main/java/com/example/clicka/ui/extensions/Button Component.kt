@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -48,11 +49,14 @@ private fun ButtonCard(
             .wrapContentHeight()
             .then(
                 if (isSelected) Modifier.border(
-                    width = 2.dp,
+                    width = 1.dp,
                     shape = MaterialTheme.shapes.large,
                     color = MaterialTheme.colorScheme.onSurface.copy(0.86f)
                 )else Modifier
-            )
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
+        )
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,

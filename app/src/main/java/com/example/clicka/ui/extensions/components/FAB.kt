@@ -14,23 +14,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.clicka.R
 import com.example.clicka.index.FABInfo
+import com.example.clicka.ui.AutoViewModel
+import com.example.clicka.ui.theme.PrimaryText
 
 @Composable
-private fun FAB(fabInfo: FABInfo,buttonNumber: Int? = null) {
-    var buttonNumber = remember { mutableStateOf(0) }
+private fun FAB(fabInfo: FABInfo, viewModel: AutoViewModel) {
+    val icon: Int = R.drawable.play
+
+    val runValue by viewModel.isRunning
+    val isRunning = runValue && fabInfo.icon == icon
+
     Surface(
         shape = MaterialTheme.shapes.large,
-        color = Color.Transparent
-        , modifier = Modifier
-            .padding(top=4.dp)
+        color = Color.Transparent, modifier = Modifier
+            .padding(top = 4.dp)
     ) {
         FloatingActionButton(
             onClick = fabInfo.onClick,
@@ -44,13 +50,14 @@ private fun FAB(fabInfo: FABInfo,buttonNumber: Int? = null) {
             modifier = Modifier
                 .padding(0.dp) // reduced padding so FABs are closer
                 .size(36.dp),
-            containerColor = Color.Transparent
+            containerColor =
+                if (isRunning) MaterialTheme.colorScheme.onSurface else Color.Transparent
         ) {
 
             Icon(
                 painter = painterResource(fabInfo.icon),
                 contentDescription = null,
-                tint = Color.White,
+                tint = if (isRunning) MaterialTheme.colorScheme.inverseOnSurface.copy(0.86f) else PrimaryText,
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
             )
@@ -63,14 +70,15 @@ private fun FAB(fabInfo: FABInfo,buttonNumber: Int? = null) {
 internal fun fabComponent(
     fabInfo: List<FABInfo>
 ) {
-    LazyColumn (
+    val viewModel :AutoViewModel = viewModel()
+    LazyColumn(
         modifier = Modifier
             .wrapContentHeight(),
         verticalArrangement = Arrangement.spacedBy(2.dp), // remove extra spacing
         contentPadding = PaddingValues(0.dp)
-    ){
+    ) {
         items(fabInfo) { fab ->
-            FAB(fab)
+            FAB(fab, viewModel)
         }
     }
 }
