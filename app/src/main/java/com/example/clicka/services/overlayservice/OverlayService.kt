@@ -119,8 +119,9 @@ class OverlayService : Service() {
                         val currentMode = ModeState.getCurrentMode()
                         if (buttonNumber >  1 && currentMode == ClickMode.SINGLE) {
                             removeLastButton()
-                        } else
-                            mode(currentMode)
+                        } else if(buttonNumber < 2 && currentMode == ClickMode.MULTIPLE){
+                            addButton()
+                        }else mode(currentMode)
                     },
                     onRemove = { removeLastButton() },
                     onSettings = { showSettingsModal() }
@@ -492,11 +493,16 @@ class OverlayService : Service() {
             clickButtonViews.remove(lastButtonNumber)
             clickButtonPositions.remove(lastButtonNumber)
 
-            // Also remove from swipePositions if in SWIPE mode
-            val currentMode = ModeState.getCurrentMode()
-            if (currentMode == ClickMode.SWIPE && swipePositions.isNotEmpty()) {
-                swipePositions.removeAt(swipePositions.size - 1)
-                Log.i(TAG, "Removed swipe point, remaining: ${swipePositions.size}")
+            // Rebuild swipePositions from the remaining first 2 buttons
+            if (swipePositions.isNotEmpty()) {
+                swipePositions.clear()
+                if (clickButtonPositions.size >= 2) {
+                    val sortedPositions = clickButtonPositions.toSortedMap().values.take(2)
+                    swipePositions.addAll(sortedPositions)
+                    Log.i(TAG, "Rebuilt swipePositions after removal: ${swipePositions.size} points")
+                } else {
+                    Log.i(TAG, "Cleared swipePositions, not enough buttons remaining")
+                }
             }
 
             buttonNumber--
