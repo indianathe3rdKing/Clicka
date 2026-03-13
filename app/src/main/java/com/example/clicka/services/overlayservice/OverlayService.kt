@@ -121,7 +121,10 @@ class OverlayService : Service() {
                             removeLastButton()
                         } else if(buttonNumber < 2 && currentMode == ClickMode.MULTIPLE){
                             addButton()
-                        }else mode(currentMode)
+                        } else if(buttonNumber > 2 && currentMode == ClickMode.SWIPE){
+                            removeLastButton()
+                        }
+                        else mode(currentMode)
                     },
                     onRemove = { removeLastButton() },
                     onSettings = { showSettingsModal() }
