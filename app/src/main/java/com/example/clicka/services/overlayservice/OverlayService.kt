@@ -233,12 +233,13 @@ class OverlayService : Service() {
                     )
                     clickButtonPositions[currentButtonNumber] = newPos
 
-                    // Also update swipePositions if in SWIPE mode
-                    val currentMode = ModeState.getCurrentMode()
-                    if (currentMode == ClickMode.SWIPE) {
-                        val index = currentButtonNumber - 1
-                        if (index in swipePositions.indices) {
-                            swipePositions[index] = newPos
+                    // Update swipePositions if this button is one of the first 2 buttons (by creation order)
+                    if (swipePositions.isNotEmpty()) {
+                        val sortedButtonNumbers = clickButtonPositions.keys.sorted()
+                        val positionIndex = sortedButtonNumbers.indexOf(currentButtonNumber)
+                        if (positionIndex in 0..1 && positionIndex < swipePositions.size) {
+                            swipePositions[positionIndex] = newPos
+                            Log.d(TAG, "Drag: Updated swipePositions[$positionIndex] = $newPos")
                         }
                     }
                 },
@@ -443,14 +444,23 @@ class OverlayService : Service() {
             return
         }
 
+        // Auto-populate swipePositions from clickButtonPositions if empty
+        // This handles the case where buttons were added in MULTIPLE/SINGLE mode then switched to SWIPE
+        if (swipePositions.size < 2 && clickButtonPositions.size >= 2) {
+            swipePositions.clear()
+            val sortedPositions = clickButtonPositions.toSortedMap().values.take(2)
+            swipePositions.addAll(sortedPositions)
+            Log.i(TAG, "Auto-populated swipePositions from existing buttons: ${swipePositions[0]} -> ${swipePositions[1]}")
+        }
+
         if (swipePositions.size < 2) {
-            Log.w(TAG, "No click buttons placed, nothing to auto-click")
+            Log.w(TAG, "Need at least 2 buttons for swipe mode, current: ${swipePositions.size}")
             return
         }
 
         //Toggle if already running, stop and show buttons again
         if (service.isRunning()) {
-            Log.i(TAG, "Stopping auto-click via Engine")
+            Log.i(TAG, "Stopping auto-swipe via Engine")
             service.stopAutoClick()
             isAutoClicking = false
             showClickButtons()
@@ -460,6 +470,7 @@ class OverlayService : Service() {
 
         val fromPoint = swipePositions[0]
         val toPoint = swipePositions[1]
+        Log.i(TAG, "Starting auto-swipe from $fromPoint to $toPoint")
 
         //Hide the click buttons so gestures reach the underlying app
         isAutoClicking = true
