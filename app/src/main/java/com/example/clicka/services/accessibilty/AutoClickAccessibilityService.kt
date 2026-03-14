@@ -3,9 +3,7 @@ package com.example.clicka.services.accessibilty
 // Android
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
-import android.content.Intent
 import android.graphics.Point
-import android.provider.Settings
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 
@@ -21,7 +19,6 @@ import com.example.clicka.actions.gesture.GestureExecutor
 import com.example.clicka.base.AndroidExecutor
 import com.example.clicka.base.identifier.Identifier
 import com.example.clicka.config.domain.EditedActionBuilder
-import com.example.clicka.config.domain.getDefaultPauseDurationMs
 import com.example.clicka.config.data.getConfigPreferences
 import com.example.clicka.config.data.getRandomizeConfig
 import com.example.clicka.engine.ActionExecutor

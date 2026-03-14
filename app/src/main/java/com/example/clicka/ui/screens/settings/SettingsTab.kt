@@ -1,11 +1,8 @@
 package com.example.clicka.ui.screens.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,14 +53,34 @@ private fun SettingsScreen() {
     val prefs = remember { context.getConfigPreferences() }
 
     // Click Settings
-    var clickPressDuration by remember { mutableStateOf(prefs.getClickPressDurationConfig(50L).toString()) }
-    var clickRepeatCount by remember { mutableStateOf(prefs.getClickRepeatCountConfig(1).toString()) }
-    var clickRepeatDelay by remember { mutableStateOf(prefs.getClickRepeatDelayConfig(100L).toString()) }
+    var clickPressDuration by remember {
+        mutableStateOf(
+            prefs.getClickPressDurationConfig(50L).toString()
+        )
+    }
+    var clickRepeatCount by remember {
+        mutableStateOf(
+            prefs.getClickRepeatCountConfig(1).toString()
+        )
+    }
+    var clickRepeatDelay by remember {
+        mutableStateOf(
+            prefs.getClickRepeatDelayConfig(100L).toString()
+        )
+    }
 
     // Swipe Settings
     var swipeDuration by remember { mutableStateOf(prefs.getSwipeDurationConfig(300L).toString()) }
-    var swipeRepeatCount by remember { mutableStateOf(prefs.getSwipeRepeatCountConfig(1).toString()) }
-    var swipeRepeatDelay by remember { mutableStateOf(prefs.getSwipeRepeatDelayConfig(100L).toString()) }
+    var swipeRepeatCount by remember {
+        mutableStateOf(
+            prefs.getSwipeRepeatCountConfig(1).toString()
+        )
+    }
+    var swipeRepeatDelay by remember {
+        mutableStateOf(
+            prefs.getSwipeRepeatDelayConfig(100L).toString()
+        )
+    }
 
     // General Settings
     var pauseDuration by remember { mutableStateOf(prefs.getPauseDurationConfig(1000L).toString()) }

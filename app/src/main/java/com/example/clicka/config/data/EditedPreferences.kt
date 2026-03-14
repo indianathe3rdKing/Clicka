@@ -98,3 +98,5 @@ internal fun SharedPreferences.getRandomizeConfig(default: Boolean = true): Bool
 /** Save whether to randomize timing */
 internal fun SharedPreferences.Editor.putRandomizeConfig(randomize: Boolean): SharedPreferences.Editor =
     putBoolean(PREF_RANDOMIZE_TIMING, randomize)
+
+
