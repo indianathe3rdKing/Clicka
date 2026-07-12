@@ -11,7 +11,7 @@ room {
 }
 
 android {
-    namespace = "com.example.clicka"
+    namespace = "com.indiphile_menziwa.clicka"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.clicka"
+        applicationId = "com.indiphile_menziwa.clicka"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
