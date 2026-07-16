@@ -2,15 +2,22 @@
 
 An Android auto-clicker application built with Kotlin, Jetpack Compose, and modern Android architecture.
 
-## Screenshot
+## Screenshots
 
+### Clicka
 <p align="center">
-  <img src="app/src/main/res/drawable/clicka.jpeg" alt="Clicka App Screenshot" width="300"/>
-  <img src="app/src/main/res/drawable/clicka_1.jpeg" alt="Clicka App Screenshot" width="300"/>
-  <img src="app/src/main/res/drawable/clicka_2.jpeg" alt="Clicka App Screenshot" width="300"/>
-  <img src="app/src/main/res/drawable/clicka_lite_1.jpeg" alt="Clicka App Screenshot" width="300"/>
-  <img src="app/src/main/res/drawable/clicka_lite_2.jpeg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka.jpeg" alt="Clicka" width="220"/>
+  &nbsp;&nbsp;
+  <img src="app/src/main/res/drawable/clicka_1.jpeg" alt="Clicka Screen 1" width="220"/>
+  &nbsp;&nbsp;
+  <img src="app/src/main/res/drawable/clicka_2.jpeg" alt="Clicka Screen 2" width="220"/>
+</p>
 
+### Clicka Lite
+<p align="center">
+  <img src="app/src/main/res/drawable/clicka_lite_1.jpeg" alt="Clicka Lite Screen 1" width="220"/>
+  &nbsp;&nbsp;
+  <img src="app/src/main/res/drawable/clicka_lite_2.jpeg" alt="Clicka Lite Screen 2" width="220"/>
 </p>
 
 ## Features
