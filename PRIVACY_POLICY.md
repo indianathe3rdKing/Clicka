@@ -1,6 +1,6 @@
 # Privacy Policy for Clicka
 
-**Last updated:** July 12, 2026
+**Last updated:** July 16, 2026
 
 ## Introduction
 

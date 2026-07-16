@@ -5,7 +5,12 @@ An Android auto-clicker application built with Kotlin, Jetpack Compose, and mode
 ## Screenshot
 
 <p align="center">
-  <img src="app/src/main/res/drawable/screenshot_clicka.jpg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka.jpeg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka_1.jpeg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka_2.jpeg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka_lite_1.jpeg" alt="Clicka App Screenshot" width="300"/>
+  <img src="app/src/main/res/drawable/clicka_lite_2.jpeg" alt="Clicka App Screenshot" width="300"/>
+
 </p>
 
 ## Features
@@ -79,7 +84,7 @@ com.example.clicka/
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/Clicka.git
+   git clone https://github.com/IndiphileMenziwa/Clicka.git
    ```
 
 2. Open in Android Studio (Hedgehog or newer recommended)
