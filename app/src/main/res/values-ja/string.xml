@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"このサービスにより、Clickaはユーザーに代わってクリックやジェスチャーを実行できます。本サービスではデータの収集は行いません。これは、ユーザー補助サービスへのアクセスを許可するためのリクエストです。"</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"キャンセル"</string>
+  <string name="click_settings_title">"Clickの設定"</string>
+  <string name="cycle_pause_description">"アクションサイクル間の一時停止時間"</string>
+  <string name="cycle_pause_title">"サイクルの一時停止（ms）"</string>
+  <string name="general_settings_title">"一般設定"</string>
+  <string name="multiple_button_description">"複数箇所をタップ"</string>
+  <string name="multiple_button_title">"複数箇所"</string>
+  <string name="press_duration_description">"各タップの長押し時間"</string>
+  <string name="press_duration_title">"長押し時間 (ms)"</string>
+  <string name="randomize_timing_description">"ランダムなばらつきを加えてボット検知を回避"</string>
+  <string name="randomize_timing_title">"タイミングをランダム化"</string>
+  <string name="repeat_count_description">"ボタンごとのタップ回数"</string>
+  <string name="repeat_count_description_swipe">"スワイプの繰り返し回数"</string>
+  <string name="repeat_count_title">"繰り返し回数"</string>
+  <string name="repeat_delay_description">"繰り返しタップの間隔"</string>
+  <string name="repeat_delay_description_swipes">"繰り返しスワイプの間隔"</string>
+  <string name="repeat_delay_title">"繰り返し遅延 (ms)"</string>
+  <string name="save_button_title">"保存"</string>
+  <string name="save_settings_title">"設定を保存"</string>
+  <string name="save_text">"設定を保存しました！"</string>
+  <string name="select">"選択"</string>
+  <string name="settings">"設定"</string>
+  <string name="single_button_description">"1か所をタップ"</string>
+  <string name="single_button_title">"単点"</string>
+  <string name="swipe_button_description">"地点間をスワイプ"</string>
+  <string name="swipe_button_title">"スワイプ"</string>
+  <string name="swipe_duration_description">"スワイプジェスチャーにかかる時間（ms）"</string>
+  <string name="swipe_duration_title">"スワイプ継続時間（ms）"</string>
+  <string name="swipe_settings">"スワイプの設定"</string>
+</resources>

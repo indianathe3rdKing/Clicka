@@ -20,10 +20,10 @@ android {
 
     defaultConfig {
         applicationId = "com.indiphile_menziwa.clicka"
-        minSdk = 33
+        minSdk = 30
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -79,7 +79,7 @@ dependencies {
     // additional small libs
     implementation("androidx.savedstate:savedstate-ktx:1.4.0")
 
-    // Coroutines - updated to a modern stable version compatible with Kotlin 2.x
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 
@@ -94,4 +94,7 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+
+    // Official AndroidX Splash Screen API
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Questo servizio consente a Clicka di eseguire tocchi e gesti al posto tuo. Non vengono raccolti dati da questo servizio. Serve a richiedere l’autorizzazione ad accedere al servizio di accessibilità."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"Annulla"</string>
+  <string name="click_settings_title">"Impostazioni clic"</string>
+  <string name="cycle_pause_description">"Durata della pausa tra i cicli di azione"</string>
+  <string name="cycle_pause_title">"Pausa ciclo (ms)"</string>
+  <string name="general_settings_title">"Impostazioni generali"</string>
+  <string name="multiple_button_description">"Tocca più punti"</string>
+  <string name="multiple_button_title">"Multi-punto"</string>
+  <string name="press_duration_description">"Quanto tenere premuto ogni clic"</string>
+  <string name="press_duration_title">"Durata pressione (ms)"</string>
+  <string name="randomize_timing_description">"Aggiungi variazioni casuali per aggirare il rilevamento anti-bot"</string>
+  <string name="randomize_timing_title">"Randomizza intervalli"</string>
+  <string name="repeat_count_description">"Numero di clic per pulsante"</string>
+  <string name="repeat_count_description_swipe">"Numero di volte per ripetere lo swipe"</string>
+  <string name="repeat_count_title">"Numero di ripetizioni"</string>
+  <string name="repeat_delay_description">"Ritardo tra i clic ripetuti"</string>
+  <string name="repeat_delay_description_swipes">"Ritardo tra gli swipe ripetuti"</string>
+  <string name="repeat_delay_title">"Ritardo di ripetizione (ms)"</string>
+  <string name="save_button_title">"Salva"</string>
+  <string name="save_settings_title">"Salva impostazioni"</string>
+  <string name="save_text">"Impostazioni salvate con successo!"</string>
+  <string name="select">"Seleziona"</string>
+  <string name="settings">"Impostazioni"</string>
+  <string name="single_button_description">"Tocca un singolo punto"</string>
+  <string name="single_button_title">"Singolo"</string>
+  <string name="swipe_button_description">"Scorri tra punti"</string>
+  <string name="swipe_button_title">"Scorri"</string>
+  <string name="swipe_duration_description">"Per quanto tempo dura il gesto di scorrimento"</string>
+  <string name="swipe_duration_title">"Durata dello scorrimento (ms)"</string>
+  <string name="swipe_settings">"Impostazioni di scorrimento"</string>
+</resources>

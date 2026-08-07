@@ -9,9 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.indiphile_menziwa.clicka.R
 import com.indiphile_menziwa.clicka.ui.extensions.TopBar
 import com.indiphile_menziwa.clicka.config.data.*
 import com.indiphile_menziwa.clicka.ui.extensions.components.SaveButton
@@ -19,22 +21,21 @@ import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsSection
 import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsSwitchItem
 import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsTextField
 
-object SettingsTab: Tab {
+object SettingsTab : Tab {
     @Suppress("unused")
     private fun readResolve(): Any = SettingsTab
 
     override val options: TabOptions
-
         @Composable
-        get(){
-            val title = "Settings"
+        get() {
+            val title = stringResource(R.string.settings)
             val icon = painterResource(R.drawable.settings_30)
 
-            return remember{
+            return remember {
                 TabOptions(
                     index = 0u,
-                    title=title,
-                    icon=icon
+                    title = title,
+                    icon = icon
                 )
             }
         }
@@ -93,7 +94,7 @@ private fun SettingsScreen() {
             .padding(20.dp)
 
     ) {
-        TopBar("Settings")
+        TopBar(stringResource(R.string.settings))
 
         Column(
             modifier = Modifier
@@ -103,67 +104,67 @@ private fun SettingsScreen() {
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Click Settings Section
-            SettingsSection(title = "Click Settings") {
+            SettingsSection(title = stringResource(R.string.click_settings_title)) {
                 SettingsTextField(
                     value = clickPressDuration,
                     onValueChange = { if (it.all(Char::isDigit)) clickPressDuration = it },
-                    label = "Press Duration (ms)",
-                    description = "How long to hold each click"
+                    label = stringResource(R.string.press_duration_title),
+                    description = stringResource(R.string.press_duration_description)
                 )
 
                 SettingsTextField(
                     value = clickRepeatCount,
                     onValueChange = { if (it.all(Char::isDigit)) clickRepeatCount = it },
-                    label = "Repeat Count",
-                    description = "Number of times to click per button"
+                    label = stringResource(R.string.repeat_count_title),
+                    description = stringResource(R.string.repeat_count_description)
                 )
 
                 SettingsTextField(
                     value = clickRepeatDelay,
                     onValueChange = { if (it.all(Char::isDigit)) clickRepeatDelay = it },
-                    label = "Repeat Delay (ms)",
-                    description = "Delay between repeated clicks"
+                    label = stringResource(R.string.repeat_delay_title),
+                    description = stringResource(R.string.repeat_delay_description)
                 )
             }
 
             // Swipe Settings Section
-            SettingsSection(title = "Swipe Settings") {
+            SettingsSection(title = stringResource(R.string.swipe_settings)) {
                 SettingsTextField(
                     value = swipeDuration,
                     onValueChange = { if (it.all(Char::isDigit)) swipeDuration = it },
-                    label = "Swipe Duration (ms)",
-                    description = "How long the swipe gesture takes"
+                    label = stringResource(R.string.swipe_duration_title),
+                    description = stringResource(R.string.swipe_duration_description)
                 )
 
                 SettingsTextField(
                     value = swipeRepeatCount,
                     onValueChange = { if (it.all(Char::isDigit)) swipeRepeatCount = it },
-                    label = "Repeat Count",
-                    description = "Number of times to repeat swipe"
+                    label = stringResource(R.string.repeat_count_title),
+                    description = stringResource(R.string.repeat_count_description_swipe)
                 )
 
                 SettingsTextField(
                     value = swipeRepeatDelay,
                     onValueChange = { if (it.all(Char::isDigit)) swipeRepeatDelay = it },
-                    label = "Repeat Delay (ms)",
-                    description = "Delay between repeated swipes"
+                    label = stringResource(R.string.repeat_delay_title),
+                    description = stringResource(R.string.repeat_count_description_swipe)
                 )
             }
 
             // General Settings Section
-            SettingsSection(title = "General Settings") {
+            SettingsSection(title = stringResource(R.string.general_settings_title)) {
                 SettingsTextField(
                     value = pauseDuration,
                     onValueChange = { if (it.all(Char::isDigit)) pauseDuration = it },
-                    label = "Cycle Pause (ms)",
-                    description = "Pause duration between action cycles"
+                    label = stringResource(R.string.cycle_pause_title),
+                    description = stringResource(R.string.cycle_pause_description)
                 )
 
                 SettingsSwitchItem(
                     checked = randomize,
                     onCheckedChange = { randomize = it },
-                    label = "Randomize Timing",
-                    description = "Add random variations to bypass anti-bot detection"
+                    label = stringResource(R.string.randomize_timing_title),
+                    description = stringResource(R.string.randomize_timing_description)
                 )
             }
 
@@ -190,7 +191,7 @@ private fun SettingsScreen() {
                     showSaveMessage = false
                 }
                 Text(
-                    "Settings saved successfully!",
+                    stringResource(R.string.save_text),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.align(Alignment.CenterHorizontally)

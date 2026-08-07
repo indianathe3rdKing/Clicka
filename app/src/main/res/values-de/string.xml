@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Dieser Dienst ermöglicht es Clicka, in Ihrem Namen Tippen und Gesten auszuführen. Dieser Dienst sammelt keine Daten. Damit wird die Berechtigung angefordert, auf den Bedienungshilfen-Dienst zuzugreifen."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"Abbrechen"</string>
+  <string name="click_settings_title">"Click-Einstellungen"</string>
+  <string name="cycle_pause_description">"Pausendauer zwischen Aktionszyklen"</string>
+  <string name="cycle_pause_title">"Zykluspause (ms)"</string>
+  <string name="general_settings_title">"Allgemeine Einstellungen"</string>
+  <string name="multiple_button_description">"Mehrere Positionen antippen"</string>
+  <string name="multiple_button_title">"Mehrfach"</string>
+  <string name="press_duration_description">"Wie lange jeder Tipp gedrückt gehalten wird"</string>
+  <string name="press_duration_title">"Druckdauer (ms)"</string>
+  <string name="randomize_timing_description">"Zufällige Variationen hinzufügen, um die Anti-Bot-Erkennung zu umgehen"</string>
+  <string name="randomize_timing_title">"Zeitintervalle zufällig variieren"</string>
+  <string name="repeat_count_description">"Anzahl der Tipps pro Schaltfläche"</string>
+  <string name="repeat_count_description_swipe">"Anzahl der Wiederholungen der Wischgeste"</string>
+  <string name="repeat_count_title">"Anzahl der Wiederholungen"</string>
+  <string name="repeat_delay_description">"Verzögerung zwischen wiederholten Klicks"</string>
+  <string name="repeat_delay_description_swipes">"Verzögerung zwischen wiederholten Wischgesten"</string>
+  <string name="repeat_delay_title">"Wiederholungsverzögerung (ms)"</string>
+  <string name="save_button_title">"Speichern"</string>
+  <string name="save_settings_title">"Einstellungen speichern"</string>
+  <string name="save_text">"Einstellungen erfolgreich gespeichert!"</string>
+  <string name="select">"Auswählen"</string>
+  <string name="settings">"Einstellungen"</string>
+  <string name="single_button_description">"Tippe auf einen einzelnen Punkt"</string>
+  <string name="single_button_title">"Einzeln"</string>
+  <string name="swipe_button_description">"Wische zwischen Punkten"</string>
+  <string name="swipe_button_title">"Wischen"</string>
+  <string name="swipe_duration_description">"Wie lange eine Wischgeste dauert"</string>
+  <string name="swipe_duration_title">"Wischdauer (ms)"</string>
+  <string name="swipe_settings">"Wisch-Einstellungen"</string>
+</resources>

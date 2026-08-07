@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"تتيح هذه الخدمة لـ Clicka تنفيذ النقرات والإيماءات نيابةً عنك. لا تجمع هذه الخدمة أي بيانات. هذا النص لطلب إذن الوصول إلى خدمة تسهيلات الاستخدام."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"إلغاء"</string>
+  <string name="click_settings_title">"إعدادات Clicka"</string>
+  <string name="cycle_pause_description">"مدة التوقف بين دورات الإجراءات"</string>
+  <string name="cycle_pause_title">"تأخير الدورة (ms)"</string>
+  <string name="general_settings_title">"الإعدادات العامة"</string>
+  <string name="multiple_button_description">"انقر على عدة نقاط"</string>
+  <string name="multiple_button_title">"عدة مواقع"</string>
+  <string name="press_duration_description">"مدة الضغط لكل نقرة"</string>
+  <string name="press_duration_title">"مدة الضغط (ms)"</string>
+  <string name="randomize_timing_description">"إضافة تباينات عشوائية لتفادي اكتشاف أنظمة كشف البوتات"</string>
+  <string name="randomize_timing_title">"توقيت عشوائي"</string>
+  <string name="repeat_count_description">"عدد النقرات لكل زر"</string>
+  <string name="repeat_count_description_swipe">"عدد مرات تكرار السحب"</string>
+  <string name="repeat_count_title">"عدد مرات التكرار"</string>
+  <string name="repeat_delay_description">"التأخير بين النقرات المتكررة"</string>
+  <string name="repeat_delay_description_swipes">"التأخير بين التمريرات المتكررة"</string>
+  <string name="repeat_delay_title">"تأخير التكرار (ms)"</string>
+  <string name="save_button_title">"حفظ"</string>
+  <string name="save_settings_title">"حفظ الإعدادات"</string>
+  <string name="save_text">"تم حفظ الإعدادات بنجاح!"</string>
+  <string name="select">"اختر"</string>
+  <string name="settings">"الإعدادات"</string>
+  <string name="single_button_description">"اضغط على موقع واحد"</string>
+  <string name="single_button_title">"نقرة"</string>
+  <string name="swipe_button_description">"مرّر بين المواقع"</string>
+  <string name="swipe_button_title">"تمرير"</string>
+  <string name="swipe_duration_description">"المدة التي تستغرقها إيماءة التمرير"</string>
+  <string name="swipe_duration_title">"مدة التمرير (ms)"</string>
+  <string name="swipe_settings">"إعدادات التمرير"</string>
+</resources>

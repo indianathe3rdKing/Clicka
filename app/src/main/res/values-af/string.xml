@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Hierdie diens stel Clicka in staat om tikke en gebare vir jou uit te voer. Hierdie diens versamel geen data nie. Dit is om toestemming te vra om toegang tot die toeganklikheidsdiens te kry."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"Kanselleer"</string>
+  <string name="click_settings_title">"Clicka-instellings"</string>
+  <string name="cycle_pause_description">"Pouseduur tussen aksiesiklusse"</string>
+  <string name="cycle_pause_title">"Sikluspouse (ms)"</string>
+  <string name="general_settings_title">"Algemene instellings"</string>
+  <string name="multiple_button_description">"Tik op verskeie punte"</string>
+  <string name="multiple_button_title">"Meerdere"</string>
+  <string name="press_duration_description">"Hoe lank om elke druk in te hou"</string>
+  <string name="press_duration_title">"Drukduur (ms)"</string>
+  <string name="randomize_timing_description">"Voeg ewekansige variasies by om anti-bot-opsporing te help vermy"</string>
+  <string name="randomize_timing_title">"Ewekansige tydsberekening"</string>
+  <string name="repeat_count_description">"Aantal klikke per knoppie"</string>
+  <string name="repeat_count_description_swipe">"Aantal kere om die veegebaar te herhaal"</string>
+  <string name="repeat_count_title">"Aantal herhalings"</string>
+  <string name="repeat_delay_description">"Vertraging tussen herhaalde tikke"</string>
+  <string name="repeat_delay_description_swipes">"Vertraging tussen herhaalde veeggebare"</string>
+  <string name="repeat_delay_title">"Herhalingsvertraging (ms)"</string>
+  <string name="save_button_title">"Stoor"</string>
+  <string name="save_settings_title">"Stoor instellings"</string>
+  <string name="save_text">"Instellings is suksesvol gestoor!"</string>
+  <string name="select">"Kies"</string>
+  <string name="settings">"Instellings"</string>
+  <string name="single_button_description">"Tik op ’n enkele plek"</string>
+  <string name="single_button_title">"Enkel"</string>
+  <string name="swipe_button_description">"Veeg tussen plekke"</string>
+  <string name="swipe_button_title">"Veeg"</string>
+  <string name="swipe_duration_description">"Hoe lank die veeggebaar duur"</string>
+  <string name="swipe_duration_title">"Veegduur (ms)"</string>
+  <string name="swipe_settings">"Veeginstellings"</string>
+</resources>

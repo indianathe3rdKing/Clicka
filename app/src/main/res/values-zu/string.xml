@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Le sevisi ivumela i-Clicka ukuthi ikwenzele ukuchofoza nokwenza iminyakazo. Le sevisi ayiqoqi idatha. Lokhu ukucela imvume yokufinyelela isevisi yokufinyeleleka."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+
+  <string name="cancel_button_title">"Khansela"</string>
+  <string name="click_settings_title">"Izilungiselelo zika-Clicka"</string>
+  <string name="cycle_pause_description">"Isikhathi sekhefu phakathi kwemijikelezo yezenzo"</string>
+  <string name="cycle_pause_title">"Ikhefu Lomjikelezo (ms)"</string>
+  <string name="general_settings_title">"Izilungiselelo Ezijwayelekile"</string>
+  <string name="multiple_button_description">"Thepha izindawo eziningana"</string>
+  <string name="multiple_button_title">"Eziningana"</string>
+  <string name="press_duration_description">"Isikhathi sokubamba ukuthepha ngakunye"</string>
+  <string name="press_duration_title">"Isikhathi Sokucindezela (ms)"</string>
+  <string name="randomize_timing_description">"Engeza ukwehluka okungahleliwe ukuze ugweme ukutholwa amasistimu okubona ama-bot"</string>
+  <string name="randomize_timing_title">"Shintsha Isikhathi Ngokungahleliwe"</string>
+  <string name="repeat_count_description">"Inani lezikhathi zokuthepha kwinkinobho ngayinye"</string>
+  <string name="repeat_count_description_swipe">"Inani lezikhathi zokuphinda ukuswayipha"</string>
+  <string name="repeat_count_title">"Inani lokuphindaphinda"</string>
+  <string name="repeat_delay_description">"Isikhathi sokulinda phakathi kokuthepha okuphindaphindiwe"</string>
+  <string name="repeat_delay_description_swipes">"Isikhathi sokulinda phakathi kokuswayipha okuphindaphindiwe"</string>
+  <string name="repeat_delay_title">"Ukubambezeleka kokuphindaphinda (ms)"</string>
+  <string name="save_button_title">"Londoloza"</string>
+  <string name="save_settings_title">"Londoloza izilungiselelo"</string>
+  <string name="save_text">"Izilungiselelo zilondolozwe ngempumelelo!"</string>
+  <string name="select">"Khetha"</string>
+  <string name="settings">"Izilungiselelo"</string>
+  <string name="single_button_description">"Thepha iphuzu elilodwa kanye"</string>
+  <string name="single_button_title">"Thepha kanye"</string>
+  <string name="swipe_button_description">"Swayipha phakathi kwamaphuzu"</string>
+  <string name="swipe_button_title">"Swayipha"</string>
+  <string name="swipe_duration_description">"Isikhathi esithathwa isenzo sokuswayipha"</string>
+  <string name="swipe_duration_title">"Isikhathi sokuswayipha (ms)"</string>
+  <string name="swipe_settings">"Izilungiselelo zokuswayipha"</string>
+</resources>

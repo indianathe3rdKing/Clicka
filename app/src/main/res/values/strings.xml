@@ -2,4 +2,40 @@
     <string name="app_name">Clicka</string>
     <string name="accessibility_service_label">Clicka</string>
     <string name="accessibility_service_description">This service allows Clicka to perform clicks and gestures on your behalf. No collection of data is done by this service.This is to request permission to access the accessibility service.</string>
+<!--  Navigation-->
+    <string name="select">Select</string>
+    <string name="settings">Settings</string>
+<!--    Select Screen-->
+    <string name="single_button_title">Single</string>
+    <string name="multiple_button_title">Multiple</string>
+    <string name="swipe_button_title">Swipe</string>
+    <string name="single_button_description">Tap a single location</string>
+    <string name="multiple_button_description">Tap multiple locations</string>
+    <string name="swipe_button_description">Swipe between locations</string>
+<!--    Settings Screen-->
+<!--    Click Settings Section-->
+    <string name="click_settings_title">Click Settings</string>
+    <string name="press_duration_title">Press Duration (ms)</string>
+    <string name="press_duration_description">How long to hold each click</string>
+    <string name="repeat_count_title">Repeat Count</string>
+    <string name="repeat_count_description">Number of times to click per button</string>
+    <string name="repeat_delay_title">Repeat Delay (ms)</string>
+    <string name="repeat_delay_description">Delay between repeated clicks</string>
+<!--    Swipe Settings Section-->
+    <string name="swipe_settings">Swipe Settings</string>
+    <string name="swipe_duration_title">Swipe Duration (ms)</string>
+    <string name="swipe_duration_description">How long to swipe gesture takes</string>
+    <string name="repeat_count_description_swipe">Number of times to repeat swipe</string>
+    <string name="repeat_delay_description_swipes">Delay between repeated swipes</string>
+<!--    General Settings Section-->
+    <string name="general_settings_title">General Settings</string>
+    <string name="cycle_pause_title">Cycle Pause (ms)</string>
+    <string name="cycle_pause_description">Pause duration between action cycles</string>
+    <string name="randomize_timing_title">Randomize Timing</string>
+    <string name="randomize_timing_description">Add random variations to bypass anti-bot detection</string>
+<!--    Save Button-->
+    <string name="save_settings_title">Save Settings</string>
+    <string name="save_button_title">Save</string>
+    <string name="cancel_button_title">Cancel</string>
+    <string name="save_text">Settings saved successfully!</string>
 </resources>

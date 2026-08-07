@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
@@ -22,7 +23,7 @@ object SelectTab : Tab {
     override val options: TabOptions
         @Composable
         get() {
-            val title = "Select"
+            val title = stringResource(R.string.select)
             val icon = painterResource(R.drawable.gesture_select)
 
             return remember {

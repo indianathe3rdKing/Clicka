@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"此服务允许 Clicka 为您执行点击和手势操作。此服务不会收集任何数据，请放心。此说明用于请求启用无障碍服务访问权限。"</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"取消"</string>
+  <string name="click_settings_title">"Clicka 设置"</string>
+  <string name="cycle_pause_description">"操作循环之间的暂停时长"</string>
+  <string name="cycle_pause_title">"循环间隔 (ms)"</string>
+  <string name="general_settings_title">"常规设置"</string>
+  <string name="multiple_button_description">"点击多个位置"</string>
+  <string name="multiple_button_title">"多点"</string>
+  <string name="press_duration_description">"每次点击需要按住多久"</string>
+  <string name="press_duration_title">"按压时长（ms）"</string>
+  <string name="randomize_timing_description">"添加随机变化以避开反机器人检测"</string>
+  <string name="randomize_timing_title">"随机延迟"</string>
+  <string name="repeat_count_description">"每个按钮的点击次数"</string>
+  <string name="repeat_count_description_swipe">"滑动重复次数"</string>
+  <string name="repeat_count_title">"重复次数"</string>
+  <string name="repeat_delay_description">"重复点击之间的延迟"</string>
+  <string name="repeat_delay_description_swipes">"重复滑动之间的延迟"</string>
+  <string name="repeat_delay_title">"重复延迟 (ms)"</string>
+  <string name="save_button_title">"保存"</string>
+  <string name="save_settings_title">"保存设置"</string>
+  <string name="save_text">"设置已成功保存!"</string>
+  <string name="select">"选择"</string>
+  <string name="settings">"设置"</string>
+  <string name="single_button_description">"轻点一个位置"</string>
+  <string name="single_button_title">"单点"</string>
+  <string name="swipe_button_description">"在位置间滑动"</string>
+  <string name="swipe_button_title">"滑动"</string>
+  <string name="swipe_duration_description">"滑动手势所需时长"</string>
+  <string name="swipe_duration_title">"滑动时长(ms)"</string>
+  <string name="swipe_settings">"滑动设置"</string>
+</resources>

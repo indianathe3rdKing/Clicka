@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.indiphile_menziwa.clicka.index.ButtonInfo
@@ -71,7 +72,7 @@ private fun ButtonCard(
             ) {
                 Icon(
                     painter = painterResource(buttonInfo.icon),
-                    contentDescription = buttonInfo.title,
+                    contentDescription = stringResource(buttonInfo.title),
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .fillMaxSize()
@@ -84,12 +85,12 @@ private fun ButtonCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    buttonInfo.title, style = MaterialTheme.typography.titleLarge,
+                    stringResource(buttonInfo.title), style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    buttonInfo.description, style = MaterialTheme.typography.bodyMedium,
+                    stringResource(buttonInfo.description), style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(0.86f)
                 )
             }

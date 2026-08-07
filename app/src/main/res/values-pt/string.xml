@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Este serviço permite que o Clicka execute cliques e gestos em seu nome. Não tem de se preocupar: este serviço não recolhe quaisquer dados. Isto serve para solicitar permissão de acesso ao serviço de acessibilidade."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"Cancelar"</string>
+  <string name="click_settings_title">"Definições de Click"</string>
+  <string name="cycle_pause_description">"Duração da pausa entre ciclos de ação"</string>
+  <string name="cycle_pause_title">"Pausa do ciclo (ms)"</string>
+  <string name="general_settings_title">"Definições gerais"</string>
+  <string name="multiple_button_description">"Tocar em vários pontos"</string>
+  <string name="multiple_button_title">"Múltiplos"</string>
+  <string name="press_duration_description">"Durante quanto tempo manter cada toque premido"</string>
+  <string name="press_duration_title">"Duração da pressão (ms)"</string>
+  <string name="randomize_timing_description">"Adicionar variações aleatórias para contornar a deteção anti-bot"</string>
+  <string name="randomize_timing_title">"Aleatorizar tempos"</string>
+  <string name="repeat_count_description">"Número de cliques por botão"</string>
+  <string name="repeat_count_description_swipe">"Número de vezes a repetir o deslize"</string>
+  <string name="repeat_count_title">"Número de repetições"</string>
+  <string name="repeat_delay_description">"Atraso entre cliques repetidos"</string>
+  <string name="repeat_delay_description_swipes">"Atraso entre deslizamentos repetidos"</string>
+  <string name="repeat_delay_title">"Atraso de repetição (ms)"</string>
+  <string name="save_button_title">"Guardar"</string>
+  <string name="save_settings_title">"Guardar definições"</string>
+  <string name="save_text">"Definições guardadas com sucesso!"</string>
+  <string name="select">"Selecionar"</string>
+  <string name="settings">"Definições"</string>
+  <string name="single_button_description">"Toque num só ponto"</string>
+  <string name="single_button_title">"Toque"</string>
+  <string name="swipe_button_description">"Deslize entre pontos"</string>
+  <string name="swipe_button_title">"Deslizar"</string>
+  <string name="swipe_duration_description">"Quanto tempo demora o gesto de deslize"</string>
+  <string name="swipe_duration_title">"Duração do Deslize (ms)"</string>
+  <string name="swipe_settings">"Definições de Deslize"</string>
+</resources>

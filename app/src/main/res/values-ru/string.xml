@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_service_description">"Эта служба позволяет Clicka выполнять касания и жесты вместо вас. Она не собирает никакие данные. Мы запрашиваем ваше разрешение на включение службы специальных возможностей."</string>
+  <string name="accessibility_service_label">"Clicka"</string>
+  <string name="app_name">"Clicka"</string>
+  <string name="cancel_button_title">"Отмена"</string>
+  <string name="click_settings_title">"Настройки нажатий"</string>
+  <string name="cycle_pause_description">"Длительность паузы между циклами действий"</string>
+  <string name="cycle_pause_title">"Пауза между циклами (ms)"</string>
+  <string name="general_settings_title">"Общие настройки"</string>
+  <string name="multiple_button_description">"Нажимать в нескольких местах"</string>
+  <string name="multiple_button_title">"Многоточечный"</string>
+  <string name="press_duration_description">"Сколько удерживать каждое нажатие"</string>
+  <string name="press_duration_title">"Длительность удержания (ms)"</string>
+  <string name="randomize_timing_description">"Добавьте случайные вариации задержек, чтобы избежать обнаружения антибот-системами"</string>
+  <string name="randomize_timing_title">"Случайная задержка"</string>
+  <string name="repeat_count_description">"Количество нажатий на каждую кнопку"</string>
+  <string name="repeat_count_description_swipe">"Количество повторений свайпа"</string>
+  <string name="repeat_count_title">"Количество повторов"</string>
+  <string name="repeat_delay_description">"Задержка между повторными нажатиями"</string>
+  <string name="repeat_delay_description_swipes">"Задержка между повторными свайпами"</string>
+  <string name="repeat_delay_title">"Задержка повтора (мс)"</string>
+  <string name="save_button_title">"Сохранить"</string>
+  <string name="save_settings_title">"Сохранить настройки"</string>
+  <string name="save_text">"Настройки успешно сохранены!"</string>
+  <string name="select">"Выбрать"</string>
+  <string name="settings">"Настройки"</string>
+  <string name="single_button_description">"Коснитесь в одной точке"</string>
+  <string name="single_button_title">"Касание"</string>
+  <string name="swipe_button_description">"Проведите между точками"</string>
+  <string name="swipe_button_title">"Смахивание"</string>
+  <string name="swipe_duration_description">"Определяет, сколько длится жест смахивания"</string>
+  <string name="swipe_duration_title">"Длительность смахивания (ms)"</string>
+  <string name="swipe_settings">"Настройки смахивания"</string>
+</resources>
