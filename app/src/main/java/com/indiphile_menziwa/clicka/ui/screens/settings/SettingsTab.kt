@@ -20,6 +20,7 @@ import com.indiphile_menziwa.clicka.ui.extensions.components.SaveButton
 import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsSection
 import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsSwitchItem
 import com.indiphile_menziwa.clicka.ui.extensions.components.SettingsTextField
+import kotlinx.coroutines.delay
 
 object SettingsTab : Tab {
     @Suppress("unused")
@@ -187,7 +188,7 @@ private fun SettingsScreen() {
 
             if (showSaveMessage) {
                 LaunchedEffect(Unit) {
-                    kotlinx.coroutines.delay(2000)
+                    delay(2000)
                     showSaveMessage = false
                 }
                 Text(
@@ -198,7 +199,7 @@ private fun SettingsScreen() {
                 )
             }
 
-            Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(90.dp))
         }
     }
 }
