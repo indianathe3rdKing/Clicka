@@ -13,7 +13,7 @@ room {
 android {
     namespace = "com.indiphile_menziwa.clicka"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
