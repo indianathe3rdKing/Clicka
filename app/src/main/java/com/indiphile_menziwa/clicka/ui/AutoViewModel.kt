@@ -4,12 +4,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.indiphile_menziwa.clicka.data.datastore.DataStoreManager
 import com.indiphile_menziwa.clicka.domain.model.ClickMode
 import com.indiphile_menziwa.clicka.state.ModeState
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class AutoViewModel: ViewModel() {
+class AutoViewModel(
+
+): ViewModel() {
 
     private var _selectedMode = mutableStateOf(ModeState.getCurrentMode())
     val selectedMode: State<ClickMode> = _selectedMode

@@ -97,4 +97,8 @@ dependencies {
 
     // Official AndroidX Splash Screen API
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //Datastore
+    implementation("androidx.datastore:datastore-preferences:1.2.1")
+
 }

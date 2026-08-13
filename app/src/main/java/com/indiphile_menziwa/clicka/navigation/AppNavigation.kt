@@ -21,25 +21,47 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import com.indiphile_menziwa.clicka.data.datastore.DataStoreManager
+import com.indiphile_menziwa.clicka.ui.extensions.components.AlertModalConsent
 import com.indiphile_menziwa.clicka.ui.screens.select.SelectTab
 import com.indiphile_menziwa.clicka.ui.screens.settings.SettingsTab
 import com.indiphile_menziwa.clicka.ui.theme.ClickaTheme
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 class MainActivity : ComponentActivity() {
+    private lateinit var dataStoreManager: DataStoreManager
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        dataStoreManager = DataStoreManager(this)
         setContent {
             ClickaTheme {
+                val scope = rememberCoroutineScope()
+
+                val isAgreementAccepted = remember(dataStoreManager) {
+                    dataStoreManager.agreementAccepted.stateIn(
+                        scope = scope,
+                        started = SharingStarted.Eagerly,
+                        initialValue = dataStoreManager.getAgreementAcceptedSync()
+                    )
+                }
+
+                val agreementAccepted by isAgreementAccepted.collectAsState()
                 TabNavigator(SelectTab) {
                     Scaffold(
                         content = { innerPadding ->
@@ -56,6 +78,13 @@ class MainActivity : ComponentActivity() {
                                     )
                                     .fillMaxSize()
                             ) {
+                                if (!agreementAccepted) {
+                                    AlertModalConsent(
+                                        onDismiss = { finish() },
+                                        onAccept = { lifecycleScope.launchWhenResumed { dataStoreManager.setAgreementAccepted(true) } },
+
+                                        )
+                                }
                                 CurrentTab()
                             }
                         },
