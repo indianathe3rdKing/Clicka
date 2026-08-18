@@ -37,8 +37,7 @@ fun Path.line(from: Point?,to:Point?,random: Random){
 }
 
 private fun Path.lineTo(position: Point,random: Random){
-    if(random == null) safeLineTo(position.x,position.y)
-    else safeLineTo(
+    safeLineTo(
         random.nextIntInOffset(position.x,RANDOMIZATION_POSITION_MAX_OFFSET_PX),
         random.nextIntInOffset(position.y,RANDOMIZATION_POSITION_MAX_OFFSET_PX)
     )

@@ -280,6 +280,7 @@ class OverlayService : Service() {
             x = 0
             y = 0
         }
+        @Suppress("DEPRECATION")
         params.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 
         val composeView = ComposeView(this).apply { isClickable = true }
