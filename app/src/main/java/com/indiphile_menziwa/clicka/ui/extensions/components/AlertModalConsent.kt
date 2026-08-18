@@ -3,8 +3,13 @@ package com.indiphile_menziwa.clicka.ui.extensions.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,8 +31,11 @@ fun AlertModalConsent(onAccept: () -> Unit, onDismiss: () -> Unit, onTutorial: (
             ) {
                 Text(
                     "Clicka requires Accessibility Service permission to function normally.\n" +
-                            "We use this permission to enable the automatic clicking feature.\n\nNo data is sold or shared with third parties."
+                            "We use this permission to enable the automatic clicking feature."
                 )
+                Spacer(Modifier.height(8.dp))
+                Text("No data is sold or shared with third parties.",
+                    color = MaterialTheme.colorScheme.error)
                 Spacer(Modifier.height(8.dp))
                 TextButton(
                     onClick = { onTutorial() }
@@ -35,6 +43,14 @@ fun AlertModalConsent(onAccept: () -> Unit, onDismiss: () -> Unit, onTutorial: (
                     Text(
                         text = "Tutorial",
                         color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(20.dp)
                     )
                 }
             }
