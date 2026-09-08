@@ -1,0 +1,76 @@
+name: Push Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permissions for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Run Lint
+        run: ./gradlew lintDebug
+
+      - name: Run Unit Tests
+        run: ./gradlew clean testDebugUnitTest --stacktrace
+
+    distribution:
+      name: distribution bundle to Google Play
+      needs: test
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v7
+
+        - name: Setup JDK 17
+          uses: actions/setup-java@v5
+          with:
+            distribution: 'temurin'
+            java-version: 17
+            cache: 'gradle'
+
+        - name: Version Bump
+          uses: chkfung/android-version-bump@v1.2.3
+          with:
+            gradlePath: app/build.gradle
+            versionCode: ${{ github.run_number }}
+
+        - name: Assemble Release Bundle
+          run: ./gradlew bundleRelease
+
+        - name: Sign Release Bundle
+          uses: r0adkll/sign-android-release@v1
+          with:
+            releaseDirectory: app/release
+            signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+            keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+            alias: ${{ secrets.KEY_ALIAS }}
+
+        - name: Deploy bundle to Google Play Store
+          uses: r0adkll/upload-google-play@v1.1.5
+          with:
+            serviceAccountJson: ${{ secrets.PLAY_AUTH_JSON }}
+            packageName: com.indianathe3rd.identity
+            releaseFiles: app/release/app-release.aab
+            track: production
+            status: completed
+            whatsNewDirectory: distribution/whatsnew
